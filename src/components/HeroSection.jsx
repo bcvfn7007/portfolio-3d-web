@@ -1,8 +1,11 @@
 import React from 'react';
 import ThreeHeroCanvas from './ThreeHeroCanvas';
 import { ArrowDownRight, Send, Sparkles, CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
+import { translations } from '../utils/translations';
 
-export default function HeroSection({ onOpenContact }) {
+export default function HeroSection({ onOpenContact, currentLang }) {
+  const t = translations[currentLang]?.hero || translations.RU.hero;
+
   const scrollToPortfolio = () => {
     const element = document.getElementById('portfolio');
     if (element) {
@@ -25,20 +28,21 @@ export default function HeroSection({ onOpenContact }) {
             {/* Status Pill Badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card border-pink-500/30 text-pink-400 text-xs sm:text-sm font-medium shadow-lg shadow-pink-500/10">
               <Sparkles className="w-4 h-4 text-pink-400 animate-pulse shrink-0" />
-              <span>Full-Stack разработчик & Telegram Bot Specialist</span>
+              <span>{t.badge}</span>
             </div>
 
-            {/* Main 3D Styled Headline */}
-            <h1 className="hero-title-3d text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white">
-              Создаю <span className="gradient-text-pink">сайты</span> и{' '}
-              <span className="gradient-text-cyan">Telegram-ботов</span> для бизнеса
+            {/* Main 3D Styled Headline - Unclipped 'g' descender loop */}
+            <h1 className="hero-title-3d text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-snug">
+              {t.title1}
+              <span className="gradient-text-pink">{t.titleSites}</span>
+              {t.titleAnd}
+              <span className="gradient-text-cyan">{t.titleBots}</span>
+              {t.titleBiz}
             </h1>
 
             {/* Subtitle */}
             <p className="text-slate-300 text-sm sm:text-lg max-w-2xl font-light leading-relaxed">
-              Превращаю сложную бизнес-логику в простые, быстродействующие веб-сервисы, 
-              высококонверсионные лендинги и автоматизированных ботов с современным 
-              дизайном и 3D-графикой.
+              {t.subtitle}
             </p>
 
             {/* Honest Operational Badges */}
@@ -46,24 +50,24 @@ export default function HeroSection({ onOpenContact }) {
               <div className="glass-card p-3.5 sm:p-4 flex items-center gap-3 border-emerald-500/25">
                 <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-white">Открыт к проектам</span>
-                  <span className="text-[11px] text-slate-400 mt-0.5">Быстрый старт</span>
+                  <span className="text-xs font-bold text-white">{t.badgeOpen}</span>
+                  <span className="text-[11px] text-slate-400 mt-0.5">Fast Response</span>
                 </div>
               </div>
 
               <div className="glass-card p-3.5 sm:p-4 flex items-center gap-3 border-purple-500/25">
                 <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-white">На связи 24/7</span>
-                  <span className="text-[11px] text-slate-400 mt-0.5">Быстрый отклик</span>
+                  <span className="text-xs font-bold text-white">{t.badge24}</span>
+                  <span className="text-[11px] text-slate-400 mt-0.5">Always Online</span>
                 </div>
               </div>
 
               <div className="glass-card p-3.5 sm:p-4 flex items-center gap-3 border-pink-500/25">
                 <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400 shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-white">Гарантия качества</span>
-                  <span className="text-[11px] text-slate-400 mt-0.5">Чистый код</span>
+                  <span className="text-xs font-bold text-white">{t.badgeQuality}</span>
+                  <span className="text-[11px] text-slate-400 mt-0.5">Clean Code</span>
                 </div>
               </div>
             </div>
@@ -75,7 +79,7 @@ export default function HeroSection({ onOpenContact }) {
                 className="magnetic-btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-sm sm:text-base shadow-xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105 active:scale-95 transition-all group"
                 data-cursor="WRITE"
               >
-                <span>Написать в Telegram</span>
+                <span>{t.btnTg}</span>
                 <Send className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform shrink-0" />
               </button>
 
@@ -84,7 +88,7 @@ export default function HeroSection({ onOpenContact }) {
                 className="magnetic-btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl glass-card text-white font-semibold text-sm sm:text-base border-white/15 hover:border-pink-500/50 hover:bg-white/5 active:scale-95 transition-all group"
                 data-cursor="VIEW"
               >
-                <span>Смотреть работы</span>
+                <span>{t.btnWork}</span>
                 <ArrowDownRight className="w-4 h-4 sm:w-5 sm:h-5 text-pink-400 group-hover:translate-y-0.5 group-hover:translate-x-0.5 transition-transform shrink-0" />
               </button>
             </div>

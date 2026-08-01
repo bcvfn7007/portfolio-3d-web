@@ -53,8 +53,8 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
 }
 
 .gradient-text-pink {
@@ -62,18 +62,22 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
 }
 
+/* Fixed descender clipping for 'g' in Syne font */
 .gradient-text-cyan {
-  background: linear-gradient(135deg, #00f5d4 0%, #38bdf8 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #00f5d4 0%, #38bdf8 50%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
-  filter: drop-shadow(0 2px 8px rgba(0, 245, 212, 0.3));
+  padding-top: 0.05em;
+  padding-bottom: 0.38em;
+  margin-bottom: -0.38em;
+  padding-right: 0.08em;
+  line-height: 1.4 !important;
+  filter: drop-shadow(0 2px 10px rgba(0, 245, 212, 0.4));
 }
 
 /* 3D Layered Hero Typography */
@@ -81,12 +85,12 @@ html, body {
   font-family: var(--font-syne);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.35 !important;
+  line-height: 1.4 !important;
   text-shadow: 
     0 2px 4px rgba(255, 42, 133, 0.3),
     0 6px 20px rgba(157, 78, 221, 0.3);
   letter-spacing: -0.01em;
-  padding-bottom: 0.1em;
+  padding-bottom: 0.2em;
 }
 
 /* Glassmorphism Styles */
@@ -175,7 +179,7 @@ body.custom-cursor-active * {
   transform: translate(-50%, -50%) scale(0.85);
 }
 
-/* Magnetic Button Base Rules (No display: inline-block override!) */
+/* Magnetic Button Base Rules */
 .magnetic-btn {
   will-change: transform;
   transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);

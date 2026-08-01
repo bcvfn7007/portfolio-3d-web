@@ -18,6 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [prefilledSummary, setPrefilledSummary] = useState('');
+  const [currentLang, setCurrentLang] = useState('RU');
 
   useEffect(() => {
     // 1. Initialize Lenis Smooth Scroll Engine
@@ -84,12 +85,16 @@ export default function App() {
       <CustomCursor />
 
       {/* Glass Navigation Header */}
-      <Navbar onOpenContact={handleOpenContact} />
+      <Navbar
+        onOpenContact={handleOpenContact}
+        currentLang={currentLang}
+        onChangeLang={(lang) => setCurrentLang(lang)}
+      />
 
       {/* Main Page Content */}
       <main>
         {/* Hero Section */}
-        <HeroSection onOpenContact={handleOpenContact} />
+        <HeroSection onOpenContact={handleOpenContact} currentLang={currentLang} />
 
         {/* About Section */}
         <AboutSection />
