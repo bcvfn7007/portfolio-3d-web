@@ -52,18 +52,28 @@ html, body {
   background: linear-gradient(135deg, #ffffff 0%, #ff66ab 50%, #9d4edd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
 
 .gradient-text-pink {
   background: linear-gradient(135deg, #ff2a85 0%, #ff70b5 50%, #9d4edd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
 
 .gradient-text-cyan {
-  background: linear-gradient(135deg, #00f5d4 0%, #70e4ef 100%);
+  background: linear-gradient(135deg, #00f5d4 0%, #38bdf8 50%, #a855f7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  filter: drop-shadow(0 2px 8px rgba(0, 245, 212, 0.3));
 }
 
 /* 3D Layered Hero Typography */
@@ -71,11 +81,12 @@ html, body {
   font-family: var(--font-syne);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.25 !important;
+  line-height: 1.35 !important;
   text-shadow: 
     0 2px 4px rgba(255, 42, 133, 0.3),
     0 6px 20px rgba(157, 78, 221, 0.3);
   letter-spacing: -0.01em;
+  padding-bottom: 0.1em;
 }
 
 /* Glassmorphism Styles */
@@ -139,11 +150,17 @@ body.custom-cursor-active * {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  font-weight: 700;
-  color: #fff;
+}
+
+.cursor-text {
+  font-family: var(--font-syne);
+  font-size: 9px;
+  font-weight: 800;
   letter-spacing: 0.05em;
+  color: #ffffff;
   text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .cursor-ring.cursor-hover {
