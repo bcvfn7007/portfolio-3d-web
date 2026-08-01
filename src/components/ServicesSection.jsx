@@ -5,27 +5,27 @@ import { translations } from '../utils/translations';
 export default function ServicesSection({ onOpenContactWithSummary, currentLang }) {
   const t = translations[currentLang]?.services || translations.RU.services;
 
-  // Cost Calculator State with requested friendly prices
+  // Cost Calculator State
   const [projectType, setProjectType] = useState('landing');
   const [selectedExtras, setSelectedExtras] = useState(['mobile', 'seo']);
 
   const typeOptions = {
-    landing: { name: 'Эконом Лендинг (1 страница)', basePrice: 20, baseDays: 3 },
-    landing_std: { name: 'Стандарт (Лендинг + SEO + Форма)', basePrice: 35, baseDays: 4 },
-    webapp: { name: 'Бизнес (Сайт под ключ + Админка)', basePrice: 60, baseDays: 5 },
-    tgbot: { name: 'Простой Telegram-бот (автоответчик)', basePrice: 15, baseDays: 3 },
-    tgbot_db: { name: 'Telegram-бот с Базой Данных', basePrice: 30, baseDays: 4 },
-    tgbot_crm: { name: 'Telegram-бот с Интеграциями / CRM', basePrice: 45, baseDays: 5 },
-    tgminiapp: { name: 'Telegram Mini App (TMA веб-приложение)', basePrice: 60, baseDays: 5 }
+    landing: { name: t.types.landing, basePrice: 20, baseDays: 3 },
+    landing_std: { name: t.types.landing_std, basePrice: 35, baseDays: 4 },
+    webapp: { name: t.types.webapp, basePrice: 60, baseDays: 5 },
+    tgbot: { name: t.types.tgbot, basePrice: 15, baseDays: 3 },
+    tgbot_db: { name: t.types.tgbot_db, basePrice: 30, baseDays: 4 },
+    tgbot_crm: { name: t.types.tgbot_crm, basePrice: 45, baseDays: 5 },
+    tgminiapp: { name: t.types.tgminiapp, basePrice: 60, baseDays: 5 }
   };
 
   const extraOptions = [
-    { id: 'mobile', name: 'Полная адаптивность под смартфоны', price: 0, days: 0 },
-    { id: 'seo', name: 'Базовое SEO и мета-теги', price: 0, days: 0 },
-    { id: 'three3d', name: '3D элементы и эффекты (Three.js)', price: 15, days: 1 },
-    { id: 'admin', name: 'Панель администратора (CMS)', price: 20, days: 2 },
-    { id: 'payments', name: 'Подключение онлайн-оплаты (Payme/Click)', price: 15, days: 1 },
-    { id: 'ai', name: 'Интеграция ИИ (OpenAI / ChatGPT)', price: 20, days: 1 }
+    { id: 'mobile', name: t.extras.mobile, price: 0, days: 0 },
+    { id: 'seo', name: t.extras.seo, price: 0, days: 0 },
+    { id: 'three3d', name: t.extras.three3d, price: 15, days: 1 },
+    { id: 'admin', name: t.extras.admin, price: 20, days: 2 },
+    { id: 'payments', name: t.extras.payments, price: 15, days: 1 },
+    { id: 'ai', name: t.extras.ai, price: 20, days: 1 }
   ];
 
   const toggleExtra = (id) => {
@@ -57,7 +57,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
       .filter(Boolean)
       .join(', ');
 
-    const summary = `Расчёт стоимости: ${currentBase.name}\nОпции: ${extrasNames}\nОриентир бюджета: ~$${calculatedPrice}\nСрок: ~${daysTotal} дн.`;
+    const summary = `${t.calcTitle}: ${currentBase.name}\n${t.step2}: ${extrasNames}\n~$${calculatedPrice} (~${daysTotal} ${t.daysText})`;
     onOpenContactWithSummary(summary);
   };
 
@@ -130,7 +130,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
             <div className="pt-6 border-t border-white/10 flex items-center justify-between mt-6">
               <span className="text-xs text-slate-400 font-mono">Срок: от 3 до 5 дней</span>
               <button
-                onClick={() => onOpenContactWithSummary('Интересует разработка сайта / лендинга')}
+                onClick={() => onOpenContactWithSummary(t.sitesTitle)}
                 className="text-xs font-bold text-pink-400 hover:text-pink-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span>Обсудить</span>
@@ -185,7 +185,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
             <div className="pt-6 border-t border-white/10 flex items-center justify-between mt-6">
               <span className="text-xs text-slate-400 font-mono">Срок: от 3 до 7 дней</span>
               <button
-                onClick={() => onOpenContactWithSummary('Интересует разработка Telegram-бота')}
+                onClick={() => onOpenContactWithSummary(t.botsTitle)}
                 className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span>Обсудить</span>
@@ -216,17 +216,17 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
             {/* Live Result Display */}
             <div className="flex items-center gap-6 glass-card px-6 py-3 border-pink-500/40 bg-pink-500/5">
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-mono text-slate-400">Ориентир стоимости:</span>
+                <span className="text-[10px] uppercase font-mono text-slate-400">{t.calcEst}</span>
                 <span className="text-2xl font-extrabold font-syne text-pink-400 flex items-center">
                   ~${calculatedPrice}
                 </span>
               </div>
               <div className="h-8 w-px bg-white/10" />
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-mono text-slate-400">Срок разработки:</span>
+                <span className="text-[10px] uppercase font-mono text-slate-400">{t.calcTime}</span>
                 <span className="text-lg font-bold font-syne text-purple-300 flex items-center gap-1">
                   <Clock className="w-4 h-4 text-purple-400" />
-                  ~{daysTotal} дн.
+                  ~{daysTotal} {t.daysText}
                 </span>
               </div>
             </div>
@@ -237,7 +237,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
             {/* Step 1: Select Type */}
             <div className="lg:col-span-5 space-y-4">
               <label className="text-xs font-mono uppercase tracking-wider text-pink-400 font-bold block">
-                1. Тип проекта:
+                {t.step1}
               </label>
               <div className="space-y-2.5">
                 {Object.entries(typeOptions).map(([key, item]) => (
@@ -260,7 +260,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
             {/* Step 2: Select Extra Features */}
             <div className="lg:col-span-7 space-y-4">
               <label className="text-xs font-mono uppercase tracking-wider text-pink-400 font-bold block">
-                2. Дополнительные опции:
+                {t.step2}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {extraOptions.map((opt) => {
@@ -290,7 +290,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
                       {opt.price > 0 ? (
                         <span className="font-mono text-[11px] text-pink-400 shrink-0">+${opt.price}</span>
                       ) : (
-                        <span className="font-mono text-[10px] text-emerald-400 shrink-0">Включено</span>
+                        <span className="font-mono text-[10px] text-emerald-400 shrink-0">{t.included}</span>
                       )}
                     </button>
                   );
