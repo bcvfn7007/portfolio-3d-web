@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Mail, MessageSquare, CheckCircle2, Copy, ExternalLink } from 'lucide-react';
+import { Send, Mail, MessageSquare, Instagram, CheckCircle2, Copy, ExternalLink, Briefcase } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function ContactSection({ prefilledSummary }) {
@@ -61,20 +61,20 @@ export default function ContactSection({ prefilledSummary }) {
             Начнём ваш <span className="gradient-text-pink">проект</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Напишите мне в Telegram или заполните форму — отвечу на все вопросы и помогу сформировать ТЗ.
+            Напишите мне в Telegram, Instagram или через Kwork — отвечу на все вопросы и помогу с ТЗ.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          {/* Left Column: Real Telegram Contact Link */}
+          {/* Left Column: Direct Magnetic Contact Buttons */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="glass-card p-8 space-y-6">
               <h3 className="text-2xl font-bold font-syne text-white">
-                Прямая связь в Telegram
+                Прямая связь
               </h3>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
-                Самый быстрый способ обсудить задачу — написать в Telegram. 
+                Самый быстрый способ обсудить задачу — написать в Telegram или Instagram. 
                 Я отвечу на все вопросы по разработке сайтов и ботов.
               </p>
 
@@ -99,25 +99,45 @@ export default function ContactSection({ prefilledSummary }) {
                   <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </a>
 
-                {/* Copy Username Button */}
-                <button
-                  onClick={copyUsername}
+                {/* Instagram Direct Link */}
+                <a
+                  href="https://instagram.com/dev__man23/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="w-full p-4 rounded-2xl glass-card border-white/10 hover:border-pink-500/40 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer"
-                  data-cursor="COPY"
+                  data-cursor="INSTA"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
+                      <Instagram className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs opacity-60 font-mono">Instagram Direct:</span>
+                      <span className="text-sm font-mono text-slate-200">@dev__man23</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+                </a>
+
+                {/* Kwork Profile Direct Link */}
+                <a
+                  href="https://kwork.ru/user/bcvfn23"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full p-4 rounded-2xl glass-card border-white/10 hover:border-purple-500/40 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer"
+                  data-cursor="KWORK"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
-                      <Copy className="w-5 h-5" />
+                      <Briefcase className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs opacity-60 font-mono">Скопировать юзернейм:</span>
-                      <span className="text-sm font-mono text-slate-200">@o_o_developer</span>
+                      <span className="text-xs opacity-60 font-mono">Профиль Kwork:</span>
+                      <span className="text-sm font-mono text-slate-200">kwork.ru/user/bcvfn23</span>
                     </div>
                   </div>
-                  <span className="text-xs font-mono text-pink-400">
-                    {copied ? <span className="text-emerald-400 font-bold">Скопировано!</span> : 'Копировать'}
-                  </span>
-                </button>
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+                </a>
               </div>
             </div>
 
@@ -142,7 +162,7 @@ export default function ContactSection({ prefilledSummary }) {
                     Сообщение отправлено!
                   </h4>
                   <p className="text-slate-300 text-sm max-w-md">
-                    Спасибо за обращение. Я получил ваше сообщение и отвечу вам в Telegram в ближайшее время.
+                    Спасибо за обращение. Я получил ваше сообщение и отвечу вам в ближайшее время.
                   </p>
                 </div>
               ) : (
@@ -168,12 +188,12 @@ export default function ContactSection({ prefilledSummary }) {
 
                     <div>
                       <label className="text-xs font-mono uppercase text-slate-400 block mb-1.5">
-                        Ваш Telegram / Телефон *
+                        Ваш Telegram / Телефон / Instagram *
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="@username или телефон"
+                        placeholder="@username или контакт"
                         value={formData.contact}
                         onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors"
