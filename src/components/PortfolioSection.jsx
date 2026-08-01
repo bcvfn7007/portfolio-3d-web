@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Eye, Layers, Shield, GraduationCap, CheckCircle } from 'lucide-react';
+import { ExternalLink, Eye, Layers, Shield, GraduationCap, Factory, CheckCircle } from 'lucide-react';
 
 export default function PortfolioSection({ onSelectProject }) {
   const projects = [
@@ -56,6 +56,33 @@ export default function PortfolioSection({ onSelectProject }) {
           'Мультиязычный интерфейс (Узбекский UZ / Русский RU)'
         ]
       }
+    },
+    {
+      id: 'saruno',
+      title: 'SARUNO | Mira Miller',
+      category: 'Промышленное производство муки',
+      badge: 'Завод и Оптовая платформа',
+      description:
+        'Высокотехнологичный веб-сайт для мукомольного завода SARUNO (Зарбдар, Джизак). Мульти-язычный интерфейс (RU/EN/UZ), галерея производства, каталог и оптовые заказы.',
+      image: '/assets/projects/saruno.png',
+      tags: ['HTML5/CSS3', 'JavaScript', 'Multilingual (RU/EN/UZ)', 'Responsive', 'B2B Catalog'],
+      stats: {
+        speed: '100/100 Speed',
+        ux: 'RU / EN / UZ',
+        security: 'ISO Certified'
+      },
+      icon: Factory,
+      color: 'from-amber-500 to-amber-700',
+      demoUrl: 'https://sarunomiramiller.netlify.app/',
+      details: {
+        client: 'SARUNO Mira Miller Flour Factory',
+        deliverables: [
+          'Презентация мукомольного завода Зарбдар (мощность 200 тонн в день)',
+          'Каталог продукции (Мука Высший сорт, Первый сорт, Специализированная B2B)',
+          'Галерея автоматизированных линий производства и контроля ISO 9001',
+          'Форма прямого приёма крупных оптовых заказов и экспортных контрактов'
+        ]
+      }
     }
   ];
 
@@ -75,12 +102,12 @@ export default function PortfolioSection({ onSelectProject }) {
             Реализованные <span className="gradient-text-pink">проекты</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Настоящие веб-платформы, запущенные на Render.com с реальной бизнес-логикой.
+            Настоящие запущенные веб-платформы с реальной бизнес-логикой и работающими ссылками.
           </p>
         </div>
 
-        {/* 2 Project Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* 3 Project Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => {
             const Icon = project.icon;
 
@@ -123,10 +150,10 @@ export default function PortfolioSection({ onSelectProject }) {
                     <div className="text-xs font-mono text-pink-400 uppercase tracking-widest">
                       {project.category}
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold font-syne text-white group-hover:text-pink-300 transition-colors">
+                    <h3 className="text-2xl font-bold font-syne text-white group-hover:text-pink-300 transition-colors">
                       {project.title}
                     </h3>
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+                    <p className="text-slate-300 text-sm leading-relaxed font-light">
                       {project.description}
                     </p>
                   </div>
@@ -151,7 +178,7 @@ export default function PortfolioSection({ onSelectProject }) {
                         <span className="text-xs font-bold text-emerald-400">{project.stats.speed}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-slate-400">Язык / UI</span>
+                        <span className="text-[11px] text-slate-400">Языки / UI</span>
                         <span className="text-xs font-bold text-pink-400">{project.stats.ux}</span>
                       </div>
                       <div className="flex flex-col">
@@ -176,7 +203,7 @@ export default function PortfolioSection({ onSelectProject }) {
                       target="_blank"
                       rel="noreferrer"
                       className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-pink-500/40 inline-flex items-center justify-center text-white hover:text-pink-400 transition-colors"
-                      title="Открыть сайт на Render.com"
+                      title="Открыть проект"
                     >
                       <ExternalLink className="w-4 h-4" />
                     </a>
