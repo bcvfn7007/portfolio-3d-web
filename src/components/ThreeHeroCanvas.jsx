@@ -8,6 +8,29 @@ export default function ThreeHeroCanvas() {
     const container = mountRef.current;
     if (!container) return;
 
+    let isVisible = true;
+    let animId;
+
+    // Viewport IntersectionObserver to pause WebGL rendering loop when offscreen (High Performance 120 FPS Scroll)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            if (!animId) animate();
+          } else {
+            if (animId) {
+              cancelAnimationFrame(animId);
+              animId = null;
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(container);
+
     // Scene setup
     const scene = new THREE.Scene();
 
@@ -20,7 +43,7 @@ export default function ThreeHeroCanvas() {
     );
     camera.position.z = 5.8;
 
-    // Optimized Renderer setup (Capped pixel ratio for mobile performance)
+    // Optimized Renderer setup (Capped pixel ratio for mobile GPU performance)
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
@@ -31,8 +54,8 @@ export default function ThreeHeroCanvas() {
     const geometry = new THREE.TorusKnotGeometry(
       isMobile ? 1.0 : 1.2,
       isMobile ? 0.32 : 0.38,
-      isMobile ? 96 : 128,
-      isMobile ? 24 : 32,
+      isMobile ? 80 : 120,
+      isMobile ? 20 : 28,
       2,
       3
     );
@@ -111,9 +134,10 @@ export default function ThreeHeroCanvas() {
 
     // Animation Loop
     let clock = new THREE.Clock();
-    let animId;
 
     const animate = () => {
+      if (!isVisible) return;
+
       const elapsedTime = clock.getElapsedTime();
 
       // Continuous rotation
@@ -134,10 +158,11 @@ export default function ThreeHeroCanvas() {
     animate();
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
       if (container && renderer.domElement) {
         container.removeChild(renderer.domElement);
       }
