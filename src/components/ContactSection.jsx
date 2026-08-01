@@ -40,7 +40,7 @@ export default function ContactSection({ prefilledSummary }) {
   };
 
   const copyUsername = () => {
-    navigator.clipboard.writeText('@o_o_b_o_t_s');
+    navigator.clipboard.writeText('@o_o_developer');
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
   };
@@ -81,7 +81,7 @@ export default function ContactSection({ prefilledSummary }) {
               <div className="space-y-3 pt-2">
                 {/* Telegram Direct Magnetic Button */}
                 <a
-                  href="https://t.me/o_o_b_o_t_s"
+                  href="https://t.me/o_o_developer"
                   target="_blank"
                   rel="noreferrer"
                   className="magnetic-btn w-full p-4 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-sm shadow-lg shadow-pink-500/30 hover:scale-[1.02] transition-all flex items-center justify-between group cursor-pointer"
@@ -93,7 +93,7 @@ export default function ContactSection({ prefilledSummary }) {
                     </div>
                     <div className="flex flex-col text-left">
                       <span className="text-xs opacity-80 font-mono">Telegram Username:</span>
-                      <span className="text-sm font-bold">@o_o_b_o_t_s</span>
+                      <span className="text-sm font-bold">@o_o_developer</span>
                     </div>
                   </div>
                   <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
@@ -111,7 +111,7 @@ export default function ContactSection({ prefilledSummary }) {
                     </div>
                     <div className="flex flex-col text-left">
                       <span className="text-xs opacity-60 font-mono">Скопировать юзернейм:</span>
-                      <span className="text-sm font-mono text-slate-200">@o_o_b_o_t_s</span>
+                      <span className="text-sm font-mono text-slate-200">@o_o_developer</span>
                     </div>
                   </div>
                   <span className="text-xs font-mono text-pink-400">

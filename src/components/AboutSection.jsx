@@ -8,7 +8,7 @@ export default function AboutSection() {
     whoami: `// Developer Profile
 const developer = {
   bio: "Web-разработчик | Сайты и Telegram-боты для бизнеса",
-  specialization: "Разработка высокоскоростных веб-сайтов & Telegram-ботов",
+  telegram: "@o_o_developer",
   status: "Открыт к новым проектам"
 };`,
     tech_stack: `// Technology Stack Breakdown
