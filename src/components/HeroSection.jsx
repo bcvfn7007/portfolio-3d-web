@@ -14,7 +14,7 @@ export default function HeroSection({ onOpenContact, currentLang }) {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen pt-28 sm:pt-36 pb-16 flex items-center overflow-hidden">
+    <section id="hero" className="relative min-h-screen pt-28 sm:pt-36 pb-16 flex items-center overflow-visible">
       {/* Ambient background glow floating orbs */}
       <div className="bg-orb bg-orb-1" />
       <div className="bg-orb bg-orb-2" />
@@ -31,8 +31,8 @@ export default function HeroSection({ onOpenContact, currentLang }) {
               <span>{t.badge}</span>
             </div>
 
-            {/* Main 3D Styled Headline - Unclipped 'g' descender loop */}
-            <h1 className="hero-title-3d text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-snug">
+            {/* Main 3D Styled Headline - Unclipped descenders */}
+            <h1 className="hero-title-3d text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-normal pb-3">
               {t.title1}
               <span className="gradient-text-pink">{t.titleSites}</span>
               {t.titleAnd}
@@ -45,7 +45,7 @@ export default function HeroSection({ onOpenContact, currentLang }) {
               {t.subtitle}
             </p>
 
-            {/* Honest Operational Badges */}
+            {/* Operational Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-2xl pt-1">
               <div className="glass-card p-3.5 sm:p-4 flex items-center gap-3 border-emerald-500/25">
                 <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 shrink-0" />
@@ -93,7 +93,7 @@ export default function HeroSection({ onOpenContact, currentLang }) {
               </button>
             </div>
 
-            {/* Floating Tech Stack Pills */}
+            {/* Tech Stack */}
             <div className="flex flex-wrap items-center gap-2 pt-3">
               <span className="text-xs font-mono text-slate-400 uppercase tracking-widest mr-2">Стек:</span>
               {['React', 'Three.js', 'GSAP', 'Python', 'Telegram Bot API', 'Vite', 'TailwindCSS'].map((tech) => (
@@ -108,7 +108,7 @@ export default function HeroSection({ onOpenContact, currentLang }) {
 
           </div>
 
-          {/* Right 3D Interactive Torus Canvas */}
+          {/* Right 3D Interactive Canvas */}
           <div className="lg:col-span-5 relative flex items-center justify-center w-full">
             <div className="w-full relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 to-purple-600/20 rounded-full blur-3xl -z-10" />

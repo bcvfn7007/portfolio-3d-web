@@ -46,6 +46,14 @@ html, body {
 /* Utility Classes & Typography */
 .font-syne {
   font-family: var(--font-syne);
+  line-height: 1.4 !important;
+  overflow: visible !important;
+}
+
+/* Global Headings Fix for Syne Font Descenders (g, y, p, q, j) */
+h1, h2, h3, h4 {
+  overflow: visible !important;
+  line-height: 1.45 !important;
 }
 
 .gradient-text {
@@ -53,8 +61,11 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  padding-bottom: 0.3em;
-  margin-bottom: -0.3em;
+  padding-top: 0.05em;
+  padding-bottom: 0.45em;
+  margin-bottom: -0.45em;
+  padding-right: 0.08em;
+  line-height: 1.45 !important;
 }
 
 .gradient-text-pink {
@@ -62,21 +73,23 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  padding-bottom: 0.3em;
-  margin-bottom: -0.3em;
+  padding-top: 0.05em;
+  padding-bottom: 0.45em;
+  margin-bottom: -0.45em;
+  padding-right: 0.08em;
+  line-height: 1.45 !important;
 }
 
-/* Fixed descender clipping for 'g' in Syne font */
 .gradient-text-cyan {
   background: linear-gradient(135deg, #00f5d4 0%, #38bdf8 50%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   padding-top: 0.05em;
-  padding-bottom: 0.38em;
-  margin-bottom: -0.38em;
+  padding-bottom: 0.45em;
+  margin-bottom: -0.45em;
   padding-right: 0.08em;
-  line-height: 1.4 !important;
+  line-height: 1.45 !important;
   filter: drop-shadow(0 2px 10px rgba(0, 245, 212, 0.4));
 }
 
@@ -85,12 +98,14 @@ html, body {
   font-family: var(--font-syne);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.4 !important;
+  line-height: 1.45 !important;
   text-shadow: 
     0 2px 4px rgba(255, 42, 133, 0.3),
     0 6px 20px rgba(157, 78, 221, 0.3);
   letter-spacing: -0.01em;
-  padding-bottom: 0.2em;
+  padding-bottom: 0.35em;
+  margin-bottom: -0.35em;
+  overflow: visible !important;
 }
 
 /* Glassmorphism Styles */
