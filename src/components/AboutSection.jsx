@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, CheckCircle, Code2 } from 'lucide-react';
+import { User, CheckCircle } from 'lucide-react';
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState('whoami');
@@ -7,10 +7,9 @@ export default function AboutSection() {
   const terminalData = {
     whoami: `// Developer Profile
 const developer = {
-  role: "Full-Stack Web & Telegram Bot Developer",
-  specialization: "Сайты, Лендинги & Telegram Mini Apps",
-  experience: "Практическая разработка с фокусом на UX & 3D",
-  status: "Открыт к новым заказам"
+  bio: "Web-разработчик | Сайты и Telegram-боты для бизнеса",
+  specialization: "Разработка высокоскоростных веб-сайтов & Telegram-ботов",
+  status: "Открыт к новым проектам"
 };`,
     tech_stack: `// Technology Stack Breakdown
 const stack = {
@@ -44,24 +43,22 @@ const approach = [
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Column: Tech Graphic Avatar & Bio */}
+          {/* Left Column: Telegram Profile Avatar & Bio */}
           <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-purple-600 rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500" />
-              <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-3xl overflow-hidden glass-card border-white/20 shadow-2xl flex flex-col items-center justify-center p-6 bg-slate-950/80">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-pink-500/30 mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Code2 className="w-12 h-12" />
-                </div>
-                <span className="font-syne font-extrabold text-xl text-white tracking-wide">
-                  Dev<span className="text-pink-500">.Studio</span>
-                </span>
-                <span className="text-xs text-slate-400 font-mono mt-1">Web & Telegram Solutions</span>
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-3xl overflow-hidden glass-card border-white/20 shadow-2xl">
+                <img
+                  src="/assets/avatar.png"
+                  alt="Telegram Developer Profile Avatar"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
             </div>
 
             <div className="space-y-4">
               <h3 className="text-xl sm:text-2xl font-bold font-syne text-white leading-snug">
-                Разрабатываю решения, которые работают и приносят прибыль
+                Web-разработчик | Сайты и Telegram-боты для бизнеса
               </h3>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                 Специализируюсь на создании удобных, быстрых сайтов и автоматизированных Telegram-ботов. 
