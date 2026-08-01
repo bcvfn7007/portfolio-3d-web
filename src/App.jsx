@@ -97,16 +97,16 @@ export default function App() {
         <HeroSection onOpenContact={handleOpenContact} currentLang={currentLang} />
 
         {/* About Section */}
-        <AboutSection />
+        <AboutSection currentLang={currentLang} />
 
         {/* Portfolio Section */}
-        <PortfolioSection onSelectProject={(proj) => setSelectedProject(proj)} />
+        <PortfolioSection onSelectProject={(proj) => setSelectedProject(proj)} currentLang={currentLang} />
 
         {/* Services & Bento Grid Section */}
-        <ServicesSection onOpenContactWithSummary={handleOpenContactWithSummary} />
+        <ServicesSection onOpenContactWithSummary={handleOpenContactWithSummary} currentLang={currentLang} />
 
         {/* Contact Section */}
-        <ContactSection prefilledSummary={prefilledSummary} />
+        <ContactSection prefilledSummary={prefilledSummary} currentLang={currentLang} />
       </main>
 
       {/* Detailed Case Project Modal */}

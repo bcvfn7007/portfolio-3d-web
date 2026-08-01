@@ -22,42 +22,53 @@ export const translations = {
       badgeQuality: 'Гарантия качества'
     },
     about: {
-      tag: 'О разработчике',
-      title: 'Код, создающий ',
-      titleHighlight: 'результат',
-      bio: 'Я Full-Stack веб-разработчик. Специализируюсь на создании высокоскоростных лендингов, веб-приложений и сложных Telegram-ботов.',
-      whoami: 'Обо мне',
-      stack: 'Технологии',
-      approach: 'Подход к работе'
+      badge: 'О РАЗРАБОТЧИКЕ',
+      title1: 'Кто создаёт ваши ',
+      titleHighlight: 'проекты',
+      subtitle: 'Web-разработчик | Сайты и Telegram-боты для бизнеса',
+      desc: 'Специализируюсь на создании удобных, быстрых сайтов и автоматизированных Telegram-ботов. В каждом проекте совмещаю строгий код, безупречную скорость загрузки и современную 3D-анимацию.',
+      badge1: 'Без скрытых платежей',
+      badge2: 'Прямой контакт с автором',
+      terminalTab1: 'whoami',
+      terminalTab2: 'tech_stack',
+      terminalTab3: 'approach'
     },
     portfolio: {
-      tag: 'Реальные кейсы',
-      title: 'Реализованные ',
+      badge: 'РЕАЛЬНЫЕ КЕЙСЫ',
+      title1: 'Реализованные ',
       titleHighlight: 'проекты',
       sub: 'Настоящие запущенные веб-платформы с реальной бизнес-логикой.',
-      details: 'Детали кейса',
+      btnDetails: 'Детали кейса',
+      btnMore: 'Подробнее',
       speed: 'Скорость',
       ui: 'Языки / UI',
       std: 'Стандарт'
     },
     services: {
-      tag: 'Услуги и Стоимость',
-      title: 'Решения для вашего ',
+      badge: 'УСЛУГИ И СТОИМОСТЬ',
+      title1: 'Решения для вашего ',
       titleHighlight: 'бизнеса',
       sub: 'Прозрачное ценообразование, фиксированные сроки и доступные тарифы.',
+      sitesTitle: 'Сайты и Лендинги',
+      sitesDesc: 'Разработка стильных, быстродействующих веб-сайтов под ключ.',
+      botsTitle: 'Telegram-боты',
+      botsDesc: 'Автоматизация продаж, приём заявок, боты с БД и Telegram Mini Apps (TMA).',
       calcTitle: 'Калькулятор бюджета',
       calcSub: 'Рассчитайте примерную стоимость и срок разработки в пару кликов',
       calcBtn: 'Заказать с этим расчётом'
     },
     contact: {
-      tag: 'Связаться со мной',
-      title: 'Начнём ваш ',
+      badge: 'СВЯЗАТЬСЯ СО МНОЙ',
+      title1: 'Начнём ваш ',
       titleHighlight: 'проект',
       sub: 'Заполните форму — заявка мгновенно поступит разработчику в Telegram.',
+      directTitle: 'Прямая связь в Telegram',
+      directSub: 'Самый быстрый способ обсудить задачу — написать мне лично или через форму.',
       nameLabel: 'Ваше имя *',
       contactLabel: 'Ваш Telegram / Телефон *',
       descLabel: 'Описание проекта или задача',
-      btnSend: 'Отправить сообщение'
+      btnSend: 'Отправить сообщение',
+      submitting: 'Отправка заявки...'
     }
   },
   UZ: {
@@ -83,42 +94,53 @@ export const translations = {
       badgeQuality: 'Sifat kafolati'
     },
     about: {
-      tag: 'Dasturchi haqida',
-      title: 'Natija beradigan ',
-      titleHighlight: 'kod',
-      bio: 'Men Full-Stack veb-dasturchiman. Yuqori tezlikdagi saytlar va murakkab Telegram-botlar yaratishga ixtisoslashganman.',
-      whoami: 'Men haqimda',
-      stack: 'Texnologiyalar',
-      approach: 'Ish yondashuvi'
+      badge: 'DASTURCHI HAQIDA',
+      title1: 'Loyihalaringizni kim ',
+      titleHighlight: 'yaratadi',
+      subtitle: 'Veb-dasturchi | Biznes uchun saytlar va Telegram-botlar',
+      desc: 'Qulay, tezkor saytlar va avtomatlashtirilgan Telegram-botlar yaratishga ixtisoslashganman. Har bir loyihada toza kod va zamonaviy 3D-grafikani birlashtiraman.',
+      badge1: 'Yashirin to\'lovlarsiz',
+      badge2: 'Muallif bilan to\'g\'ridan-to\'g\'ri aloqa',
+      terminalTab1: 'whoami',
+      terminalTab2: 'tech_stack',
+      terminalTab3: 'approach'
     },
     portfolio: {
-      tag: 'Real keyslar',
-      title: 'Bajarilgan ',
+      badge: 'REAL KEYSLAR',
+      title1: 'Bajarilgan ',
       titleHighlight: 'loyihalar',
       sub: 'Real biznes-mantiqqa ega ishga tushirilgan veb-platformalar.',
-      details: 'Loyiha tafsilotlari',
+      btnDetails: 'Loyiha tafsilotlari',
+      btnMore: 'Batafsil',
       speed: 'Tezlik',
       ui: 'Tillar / UI',
       std: 'Standart'
     },
     services: {
-      tag: 'Xizmatlar va Narxlar',
-      title: 'Biznesingiz uchun ',
+      badge: 'XIZMATLAR VA NARXLAR',
+      title1: 'Biznesingiz uchun ',
       titleHighlight: 'yechimlar',
       sub: 'Shaffof narxlar, aniq muddatlar va hamyonbop tariflar.',
+      sitesTitle: 'Saytlar va Lendiglar',
+      sitesDesc: 'Tayyor holdagi zamonaviy va tezkor veb-saytlarni ishlab chiqish.',
+      botsTitle: 'Telegram-botlar',
+      botsDesc: 'Sotuvlarni avtomatlashtirish, arizalar qabul qilish va TMA ilovalari.',
       calcTitle: 'Byudjet kalkulyatori',
       calcSub: 'Taxminiy narx va muddatni bir necha bosishda hisoblang',
       calcBtn: 'Ushbu hisob bilan buyurtma berish'
     },
     contact: {
-      tag: 'Men bilan bog\'lanish',
-      title: 'Loyihangizni ',
+      badge: 'MEN BILAN BOG\'LANISH',
+      title1: 'Loyihangizni ',
       titleHighlight: 'boshlaymiz',
       sub: 'Formani to\'ldiring — ariza bir zumda Telegramga yetib boradi.',
+      directTitle: 'Telegramda to\'g\'ridan-to\'g\'ri aloqa',
+      directSub: 'Vazifani muhokama qilishning eng tezkor usuli — shaxsan yozish.',
       nameLabel: 'Ismingiz *',
       contactLabel: 'Telegram / Telefoningiz *',
       descLabel: 'Loyiha tavsifi yoki vazifa',
-      btnSend: 'Xabar yuborish'
+      btnSend: 'Xabar yuborish',
+      submitting: 'Yuborilmoqda...'
     }
   },
   EN: {
@@ -144,42 +166,53 @@ export const translations = {
       badgeQuality: 'Quality Guarantee'
     },
     about: {
-      tag: 'About Developer',
-      title: 'Code that delivers ',
-      titleHighlight: 'results',
-      bio: 'I am a Full-Stack Web Developer specializing in high-speed landing pages, web applications, and feature-rich Telegram bots.',
-      whoami: 'Who I Am',
-      stack: 'Tech Stack',
-      approach: 'My Approach'
+      badge: 'ABOUT DEVELOPER',
+      title1: 'Who creates your ',
+      titleHighlight: 'projects',
+      subtitle: 'Web Developer | Websites & Telegram Bots for Business',
+      desc: 'Specializing in building high-speed landing pages, web applications, and feature-rich Telegram bots with clean code and 3D graphics.',
+      badge1: 'No hidden fees',
+      badge2: 'Direct author contact',
+      terminalTab1: 'whoami',
+      terminalTab2: 'tech_stack',
+      terminalTab3: 'approach'
     },
     portfolio: {
-      tag: 'Real Case Studies',
-      title: 'Featured ',
+      badge: 'REAL CASE STUDIES',
+      title1: 'Featured ',
       titleHighlight: 'Projects',
       sub: 'Live production web platforms powered by real business logic.',
-      details: 'Case Details',
+      btnDetails: 'Case Details',
+      btnMore: 'View Details',
       speed: 'Speed',
       ui: 'Languages / UI',
       std: 'Standard'
     },
     services: {
-      tag: 'Services & Pricing',
-      title: 'Solutions for your ',
+      badge: 'SERVICES & PRICING',
+      title1: 'Solutions for your ',
       titleHighlight: 'business',
       sub: 'Transparent pricing, fixed timelines, and affordable rates.',
+      sitesTitle: 'Websites & Landings',
+      sitesDesc: 'Turnkey development of modern, high-speed websites.',
+      botsTitle: 'Telegram Bots',
+      botsDesc: 'Sales automation, lead management, database bots, and Mini Apps (TMA).',
       calcTitle: 'Budget Calculator',
       calcSub: 'Estimate development price and timeline in a few clicks',
       calcBtn: 'Order with this estimate'
     },
     contact: {
-      tag: 'Contact Me',
-      title: 'Let\'s start your ',
+      badge: 'CONTACT ME',
+      title1: 'Let\'s start your ',
       titleHighlight: 'project',
       sub: 'Fill out the form — inquiry delivers straight to Telegram.',
+      directTitle: 'Direct Telegram Contact',
+      directSub: 'The fastest way to discuss a project is to message directly.',
       nameLabel: 'Your Name *',
       contactLabel: 'Your Telegram / Phone *',
       descLabel: 'Project details or requirements',
-      btnSend: 'Send Message'
+      btnSend: 'Send Message',
+      submitting: 'Sending inquiry...'
     }
   }
 };

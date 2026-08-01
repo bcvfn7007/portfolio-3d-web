@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Send, MessageSquare, CheckCircle2, Copy, ExternalLink, Briefcase, Instagram, AlertCircle, Bot } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { translations } from '../utils/translations';
 
-export default function ContactSection({ prefilledSummary }) {
+export default function ContactSection({ prefilledSummary, currentLang }) {
+  const t = translations[currentLang]?.contact || translations.RU.contact;
+
   const [formData, setFormData] = useState({
     name: '',
     contact: '',
@@ -13,7 +16,6 @@ export default function ContactSection({ prefilledSummary }) {
   const [copied, setCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // VERIFIED BOT & USER CHAT ID (NO REDIRECTS, DIRECT SILENT DELIVERY)
   const BOT_TOKEN = '7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ';
   const ADMIN_CHAT_ID = '8726413176';
 
@@ -33,14 +35,14 @@ export default function ContactSection({ prefilledSummary }) {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    // Format rich HTML Telegram notification for the developer
+    // Format rich HTML Telegram notification for developer
     const telegramMessage = `🚀 <b>НОВАЯ ЗАЯВКА С ПОРТФОЛИО-САЙТА!</b>\n\n` +
       `👤 <b>Имя клиента:</b> ${formData.name}\n` +
       `📞 <b>Контакт:</b> ${formData.contact}\n` +
+      `🌐 <b>Язык:</b> ${currentLang || 'RU'}\n` +
       `📝 <b>Детали проекта / Расчёт:</b>\n${formData.message || 'Без комментария'}`;
 
     try {
-      // Send direct background HTTPS request to Telegram Bot API (No page redirects!)
       const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: {
@@ -56,7 +58,6 @@ export default function ContactSection({ prefilledSummary }) {
       const result = await response.json();
 
       if (result.ok) {
-        // Trigger celebratory confetti animation on site
         confetti({
           particleCount: 90,
           spread: 80,
@@ -71,11 +72,11 @@ export default function ContactSection({ prefilledSummary }) {
         }, 7000);
       } else {
         console.error('Telegram API error:', result);
-        setErrorMsg('Ошибка отправки. Попробуйте еще раз или напишите напрямую в Telegram.');
+        setErrorMsg('Ошибка отправки. Напишите напрямую в Telegram.');
       }
     } catch (err) {
       console.error('Error sending lead to Telegram:', err);
-      setErrorMsg('Ошибка сети. Попробуйте написать в Telegram напрямую.');
+      setErrorMsg('Ошибка сети. Напишите напрямую в Telegram.');
     } finally {
       setIsSubmitting(false);
     }
@@ -97,13 +98,14 @@ export default function ContactSection({ prefilledSummary }) {
         <div className="flex flex-col items-center text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-pink-500/30 text-pink-400 text-xs font-mono tracking-widest uppercase mb-3">
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Связаться со мной</span>
+            <span>{t.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-syne text-white">
-            Начнём ваш <span className="gradient-text-pink">проект</span>
+            {t.title1}
+            <span className="gradient-text-pink">{t.titleHighlight}</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Заполните форму — заявка мгновенно поступит разработчику в Telegram без каких-либо перенаправлений.
+            {t.sub}
           </p>
         </div>
 
@@ -113,10 +115,10 @@ export default function ContactSection({ prefilledSummary }) {
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="glass-card p-8 space-y-6">
               <h3 className="text-2xl font-bold font-syne text-white">
-                Прямая связь и Заказ
+                {t.directTitle}
               </h3>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
-                Самый быстрый способ обсудить задачу — написать мне лично или оформить заказ через форму.
+                {t.directSub}
               </p>
 
               <div className="space-y-3 pt-2">
@@ -133,7 +135,7 @@ export default function ContactSection({ prefilledSummary }) {
                       <Send className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs opacity-80 font-mono">Личный Telegram:</span>
+                      <span className="text-xs opacity-80 font-mono">Telegram Username:</span>
                       <span className="text-sm font-bold">@o_o_developer</span>
                     </div>
                   </div>
@@ -153,7 +155,7 @@ export default function ContactSection({ prefilledSummary }) {
                       <Bot className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs opacity-80 font-mono text-pink-300">Бот приёма заказов:</span>
+                      <span className="text-xs opacity-80 font-mono text-pink-300">Order Bot:</span>
                       <span className="text-sm font-bold text-white">@zakaz_priyom_bot</span>
                     </div>
                   </div>
@@ -193,7 +195,7 @@ export default function ContactSection({ prefilledSummary }) {
                       <Briefcase className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs opacity-60 font-mono">Профиль Kwork:</span>
+                      <span className="text-xs opacity-60 font-mono">Kwork Profile:</span>
                       <span className="text-sm font-mono text-slate-200">kwork.ru/user/bcvfn23</span>
                     </div>
                   </div>
@@ -206,12 +208,12 @@ export default function ContactSection({ prefilledSummary }) {
             <div className="glass-card p-6 border-emerald-500/30 bg-emerald-500/5 flex items-center gap-4">
               <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping shrink-0" />
               <p className="text-xs text-emerald-300 font-medium">
-                Открыт к новым проектам. Быстрый отклик, обсуждение задач и согласование ТЗ в день обращения.
+                Available for new projects. Fast response and project estimation.
               </p>
             </div>
           </div>
 
-          {/* Right Column: Interactive Web Form sending DIRECTLY to Telegram */}
+          {/* Right Column: Interactive Web Form */}
           <div className="lg:col-span-7">
             <div className="glass-card p-8 sm:p-10 border-white/15 relative overflow-hidden">
               {submitted ? (
@@ -220,27 +222,27 @@ export default function ContactSection({ prefilledSummary }) {
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h4 className="text-2xl font-bold font-syne text-white">
-                    Заявка мгновенно отправлена в Telegram!
+                    Заявка успешно отправлена!
                   </h4>
                   <p className="text-slate-300 text-sm max-w-md">
-                    Спасибо за обращение! Данные переданы разработчику в Telegram. Ответ поступит вам в ближайшие минуты.
+                    Спасибо! Сообщение отправлено в Telegram. Ответ поступит вам в ближайшее время.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <h3 className="text-2xl font-bold font-syne text-white">
-                    Написать сообщение
+                    {t.btnSend}
                   </h3>
 
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs font-mono uppercase text-slate-400 block mb-1.5">
-                        Ваше имя *
+                        {t.nameLabel}
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="Ваше имя"
+                        placeholder="Name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors"
@@ -249,12 +251,12 @@ export default function ContactSection({ prefilledSummary }) {
 
                     <div>
                       <label className="text-xs font-mono uppercase text-slate-400 block mb-1.5">
-                        Ваш Telegram / Телефон *
+                        {t.contactLabel}
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="@username или контакт"
+                        placeholder="@username / phone"
                         value={formData.contact}
                         onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors"
@@ -263,11 +265,11 @@ export default function ContactSection({ prefilledSummary }) {
 
                     <div>
                       <label className="text-xs font-mono uppercase text-slate-400 block mb-1.5">
-                        Описание проекта или задача
+                        {t.descLabel}
                       </label>
                       <textarea
                         rows={4}
-                        placeholder="Расскажите о вашей задаче (тип сайта, бот, пожелания)..."
+                        placeholder="Project description..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors resize-none"
@@ -288,7 +290,7 @@ export default function ContactSection({ prefilledSummary }) {
                     className="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-base shadow-lg shadow-pink-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50"
                     data-cursor="SEND"
                   >
-                    <span>{isSubmitting ? 'Отправка заявки...' : 'Отправить сообщение'}</span>
+                    <span>{isSubmitting ? t.submitting : t.btnSend}</span>
                     <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </form>

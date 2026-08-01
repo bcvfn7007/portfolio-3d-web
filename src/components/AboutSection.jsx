@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { User, CheckCircle } from 'lucide-react';
+import { translations } from '../utils/translations';
 
-export default function AboutSection() {
+export default function AboutSection({ currentLang }) {
   const [activeTab, setActiveTab] = useState('whoami');
+  const t = translations[currentLang]?.about || translations.RU.about;
 
   const terminalData = {
     whoami: `// Developer Profile
 const developer = {
-  bio: "Web-разработчик | Сайты и Telegram-боты для бизнеса",
+  bio: "${t.subtitle}",
   telegram: "@o_o_developer",
-  status: "Открыт к новым проектам"
+  status: "Available for new projects"
 };`,
     tech_stack: `// Technology Stack Breakdown
 const stack = {
@@ -19,10 +21,10 @@ const stack = {
 };`,
     philosophy: `// Core Principles
 const approach = [
-  "100% честность по срокам и возможностям",
-  "Чистая архитектура без мусорного кода",
-  "Адаптированность под любые устройства",
-  "Поддержка и бесплатная гарантия после сдачи"
+  "100% honesty on timelines and scope",
+  "Clean architecture without junk code",
+  "Fully responsive across all devices",
+  "Support and free warranty after delivery"
 ];`
   };
 
@@ -34,10 +36,11 @@ const approach = [
         <div className="flex flex-col items-center text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-purple-500/30 text-purple-400 text-xs font-mono tracking-widest uppercase mb-3">
             <User className="w-3.5 h-3.5" />
-            <span>О разработчике</span>
+            <span>{t.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-syne text-white leading-tight">
-            Кто создаёт ваши <span className="gradient-text-pink">проекты</span>
+            {t.title1}
+            <span className="gradient-text-pink">{t.titleHighlight}</span>
           </h2>
         </div>
 
@@ -58,21 +61,20 @@ const approach = [
 
             <div className="space-y-4">
               <h3 className="text-xl sm:text-2xl font-bold font-syne text-white leading-snug">
-                Web-разработчик | Сайты и Telegram-боты для бизнеса
+                {t.subtitle}
               </h3>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
-                Специализируюсь на создании удобных, быстрых сайтов и автоматизированных Telegram-ботов. 
-                В каждом проекте совмещаю строгий код, безупречную скорость загрузки и современную 3D-анимацию.
+                {t.desc}
               </p>
               
               <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
                 <div className="inline-flex items-center gap-2 text-xs font-medium text-slate-300 glass-card px-3.5 py-2 border-white/10">
                   <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Без скрытых платежей</span>
+                  <span>{t.badge1}</span>
                 </div>
                 <div className="inline-flex items-center gap-2 text-xs font-medium text-slate-300 glass-card px-3.5 py-2 border-white/10">
                   <CheckCircle className="w-4 h-4 text-pink-400 shrink-0" />
-                  <span>Прямой контакт с автором</span>
+                  <span>{t.badge2}</span>
                 </div>
               </div>
             </div>
@@ -100,7 +102,7 @@ const approach = [
                         : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    whoami
+                    {t.terminalTab1}
                   </button>
                   <button
                     onClick={() => setActiveTab('tech_stack')}
@@ -110,7 +112,7 @@ const approach = [
                         : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    tech_stack
+                    {t.terminalTab2}
                   </button>
                   <button
                     onClick={() => setActiveTab('philosophy')}
@@ -120,7 +122,7 @@ const approach = [
                         : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    approach
+                    {t.terminalTab3}
                   </button>
                 </div>
               </div>

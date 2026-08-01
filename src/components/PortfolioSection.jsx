@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { ExternalLink, Eye, Layers, Shield, GraduationCap, Factory, CheckCircle } from 'lucide-react';
+import { translations } from '../utils/translations';
 
-export default function PortfolioSection({ onSelectProject }) {
+export default function PortfolioSection({ onSelectProject, currentLang }) {
+  const t = translations[currentLang]?.portfolio || translations.RU.portfolio;
+
   const projects = [
     {
       id: 'stanford',
@@ -96,13 +99,14 @@ export default function PortfolioSection({ onSelectProject }) {
         <div className="flex flex-col items-center text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-pink-500/30 text-pink-400 text-xs font-mono tracking-widest uppercase mb-3">
             <Layers className="w-3.5 h-3.5" />
-            <span>Реальные кейсы</span>
+            <span>{t.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-syne text-white">
-            Реализованные <span className="gradient-text-pink">проекты</span>
+            {t.title1}
+            <span className="gradient-text-pink">{t.titleHighlight}</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Настоящие запущенные веб-платформы с реальной бизнес-логикой и работающими ссылками.
+            {t.sub}
           </p>
         </div>
 
@@ -139,7 +143,7 @@ export default function PortfolioSection({ onSelectProject }) {
                       className="px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-sm shadow-xl shadow-pink-500/40 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 inline-flex items-center gap-2 cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
-                      <span>Детали кейса</span>
+                      <span>{t.btnDetails}</span>
                     </button>
                   </div>
                 </div>
@@ -174,15 +178,15 @@ export default function PortfolioSection({ onSelectProject }) {
                     {/* Stats strip */}
                     <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/10 text-center">
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-slate-400">Скорость</span>
+                        <span className="text-[11px] text-slate-400">{t.speed}</span>
                         <span className="text-xs font-bold text-emerald-400">{project.stats.speed}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-slate-400">Языки / UI</span>
+                        <span className="text-[11px] text-slate-400">{t.ui}</span>
                         <span className="text-xs font-bold text-pink-400">{project.stats.ux}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-slate-400">Стандарт</span>
+                        <span className="text-[11px] text-slate-400">{t.std}</span>
                         <span className="text-xs font-bold text-purple-400">{project.stats.security}</span>
                       </div>
                     </div>
@@ -194,7 +198,7 @@ export default function PortfolioSection({ onSelectProject }) {
                       onClick={() => onSelectProject(project)}
                       className="text-xs font-bold text-pink-400 hover:text-pink-300 inline-flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
-                      <span>Подробнее</span>
+                      <span>{t.btnMore}</span>
                       <Eye className="w-3.5 h-3.5" />
                     </button>
 

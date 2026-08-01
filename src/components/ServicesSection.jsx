@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Globe, Bot, Zap, Cpu, Check, Calculator, ArrowRight, Sparkles, Clock } from 'lucide-react';
+import { translations } from '../utils/translations';
 
-export default function ServicesSection({ onOpenContactWithSummary }) {
+export default function ServicesSection({ onOpenContactWithSummary, currentLang }) {
+  const t = translations[currentLang]?.services || translations.RU.services;
+
   // Cost Calculator State with requested friendly prices
   const [projectType, setProjectType] = useState('landing');
   const [selectedExtras, setSelectedExtras] = useState(['mobile', 'seo']);
@@ -26,7 +29,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
   ];
 
   const toggleExtra = (id) => {
-    if (id === 'mobile' || id === 'seo') return; // default included
+    if (id === 'mobile' || id === 'seo') return;
     if (selectedExtras.includes(id)) {
       setSelectedExtras(selectedExtras.filter((item) => item !== id));
     } else {
@@ -68,13 +71,14 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
         <div className="flex flex-col items-center text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-purple-500/30 text-purple-400 text-xs font-mono tracking-widest uppercase mb-3">
             <Zap className="w-3.5 h-3.5" />
-            <span>Услуги и Стоимость</span>
+            <span>{t.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-syne text-white">
-            Решения для вашего <span className="gradient-text-pink">бизнеса</span>
+            {t.title1}
+            <span className="gradient-text-pink">{t.titleHighlight}</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Прозрачное ценообразование, фиксированные сроки и доступные тарифы.
+            {t.sub}
           </p>
         </div>
 
@@ -97,11 +101,10 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
 
               <div>
                 <h3 className="text-2xl sm:text-3xl font-bold font-syne text-white">
-                  Сайты и Лендинги
+                  {t.sitesTitle}
                 </h3>
                 <p className="text-slate-300 text-sm sm:text-base mt-2 font-light leading-relaxed">
-                  Разработка стильных, быстродействующих веб-сайтов под ключ. От лаконичных промо-страниц 
-                  до бизнес-сайтов с админ-панелью и онлайн-оплатой.
+                  {t.sitesDesc}
                 </p>
               </div>
 
@@ -109,17 +112,17 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                 <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
                   <span className="text-xs font-bold text-pink-400">Эконом</span>
                   <span className="text-xs text-white font-mono">$20 - $25</span>
-                  <span className="text-[11px] text-slate-400">Простой лендинг, 1 стр.</span>
+                  <span className="text-[11px] text-slate-400">1 страница</span>
                 </div>
                 <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
                   <span className="text-xs font-bold text-purple-400">Стандарт</span>
                   <span className="text-xs text-white font-mono">$35 - $40</span>
-                  <span className="text-[11px] text-slate-400">Лендинг + SEO + Форма</span>
+                  <span className="text-[11px] text-slate-400">SEO + Форма</span>
                 </div>
                 <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
                   <span className="text-xs font-bold text-cyan-400">Бизнес</span>
                   <span className="text-xs text-white font-mono">$60 - $70</span>
-                  <span className="text-[11px] text-slate-400">Сайт под ключ + Админка</span>
+                  <span className="text-[11px] text-slate-400">Под ключ + CMS</span>
                 </div>
               </div>
             </div>
@@ -130,7 +133,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                 onClick={() => onOpenContactWithSummary('Интересует разработка сайта / лендинга')}
                 className="text-xs font-bold text-pink-400 hover:text-pink-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
-                <span>Обсудить сайт</span>
+                <span>Обсудить</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -152,16 +155,16 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
 
               <div>
                 <h3 className="text-2xl sm:text-3xl font-bold font-syne text-white">
-                  Telegram-боты
+                  {t.botsTitle}
                 </h3>
                 <p className="text-slate-300 text-sm mt-2 font-light leading-relaxed">
-                  Автоматизация продаж, приём заявок, боты с БД и Telegram Mini Apps (TMA).
+                  {t.botsDesc}
                 </p>
               </div>
 
               <div className="space-y-2 pt-2">
                 <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-1.5">
-                  <span>Простой (анкета/авто)</span>
+                  <span>Простой (анкета)</span>
                   <span className="font-mono text-pink-400 font-bold">$15 - $20</span>
                 </div>
                 <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-1.5">
@@ -173,7 +176,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   <span className="font-mono text-cyan-400 font-bold">$45 - $50</span>
                 </div>
                 <div className="flex justify-between items-center text-xs text-slate-300 pt-1">
-                  <span>Telegram Mini Apps (TMA)</span>
+                  <span>Telegram Mini Apps</span>
                   <span className="font-mono text-emerald-400 font-bold">от $60</span>
                 </div>
               </div>
@@ -185,35 +188,9 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                 onClick={() => onOpenContactWithSummary('Интересует разработка Telegram-бота')}
                 className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
-                <span>Обсудить бота</span>
+                <span>Обсудить</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-          </div>
-
-          {/* Tile 3: Speed & Performance (6 cols) */}
-          <div className="bento-span-6 glass-card glass-card-hover p-6 flex items-center gap-5">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
-              <Zap className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold font-syne text-white">Максимальная скорость (100/100)</h4>
-              <p className="text-slate-300 text-xs mt-1 font-light">
-                Оптимизация кода без тормозов. Мгновенная загрузка страниц и плавные анимации на любых устройствах.
-              </p>
-            </div>
-          </div>
-
-          {/* Tile 4: AI & API Integration (6 cols) */}
-          <div className="bento-span-6 glass-card glass-card-hover p-6 flex items-center gap-5">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/30">
-              <Cpu className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold font-syne text-white">Умные ИИ-интеграции</h4>
-              <p className="text-slate-300 text-xs mt-1 font-light">
-                Подключение нейросетей OpenAI/Claude, платежных систем (Payme/Click) и автоматическая обработка заявок.
-              </p>
             </div>
           </div>
 
@@ -228,10 +205,10 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
               </div>
               <div>
                 <h3 className="text-2xl font-bold font-syne text-white">
-                  Калькулятор бюджета
+                  {t.calcTitle}
                 </h3>
                 <p className="text-slate-400 text-xs sm:text-sm font-light">
-                  Рассчитайте примерную стоимость и срок разработки в пару кликов
+                  {t.calcSub}
                 </p>
               </div>
             </div>
@@ -260,7 +237,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
             {/* Step 1: Select Type */}
             <div className="lg:col-span-5 space-y-4">
               <label className="text-xs font-mono uppercase tracking-wider text-pink-400 font-bold block">
-                1. Выберите тип проекта:
+                1. Тип проекта:
               </label>
               <div className="space-y-2.5">
                 {Object.entries(typeOptions).map(([key, item]) => (
@@ -328,7 +305,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   data-cursor="CALC"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Заказать с этим расчётом</span>
+                  <span>{t.calcBtn}</span>
                 </button>
               </div>
             </div>
