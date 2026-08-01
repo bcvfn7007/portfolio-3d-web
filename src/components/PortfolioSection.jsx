@@ -42,7 +42,7 @@ export default function PortfolioSection({ onSelectProject }) {
       stats: {
         speed: 'Real-time AI',
         ux: 'Multilingual (UZ/RU)',
-        security: 'Gov Standard'
+        security: 'Demo Platform'
       },
       icon: Shield,
       color: 'from-cyan-500 to-blue-600',
