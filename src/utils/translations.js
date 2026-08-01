@@ -42,7 +42,45 @@ export const translations = {
       btnMore: 'Подробнее',
       speed: 'Скорость',
       ui: 'Языки / UI',
-      std: 'Стандарт'
+      std: 'Стандарт',
+      items: {
+        stanford: {
+          category: 'Языковая онлайн-школа',
+          badge: 'EdTech & Web Platform',
+          description: 'Обучающий веб-портал языковой школы Stanford с личным кабинетом студента, записью на курсы английского языка и интерактивной системой тестирования.',
+          stats: { speed: '99/100 Lighthouse', ux: 'Адаптивный UI', security: 'SSL & Auth' },
+          deliverables: [
+            'Каталог языковых курсов и программ подготовки',
+            'Личные кабинеты студентов и онлайн-запись',
+            'Интеграция тестирования уровня знаний',
+            'Быстрый отклик и адаптивность под все устройства'
+          ]
+        },
+        yoshlar: {
+          category: 'Научно-диагностическая платформа',
+          badge: 'Государственная ИИ-система',
+          description: 'Интеллектуальный анализ городской безопасности и научно-диагностическая платформа для мониторинга, профилактики правонарушений и поддержки молодежи Сырдарьинской области.',
+          stats: { speed: 'Real-time AI', ux: 'Multilingual (UZ/RU)', security: 'Demo Platform' },
+          deliverables: [
+            'Интеллектуальный анализ городской безопасности (Shahar Xavfsizligining Intellektual Tahlili)',
+            'Мониторинг 10 махаллинских структур Сырдарьинской области',
+            'Интеграция выгрузки данных и документов (API Hujjatlari)',
+            'Мультиязычный интерфейс (Узбекский UZ / Русский RU)'
+          ]
+        },
+        saruno: {
+          category: 'Промышленное производство муки',
+          badge: 'Завод и Оптовая платформа',
+          description: 'Высокотехнологичный веб-сайт для мукомольного завода SARUNO (Зарбдар, Джизак). Мульти-язычный интерфейс (RU/EN/UZ), галерея производства, каталог и оптовые заказы.',
+          stats: { speed: '100/100 Speed', ux: 'RU / EN / UZ', security: 'ISO Certified' },
+          deliverables: [
+            'Презентация мукомольного завода Зарбдар (мощность 200 тонн в день)',
+            'Каталог продукции (Мука Высший сорт, Первый сорт, Специализированная B2B)',
+            'Галерея автоматизированных линий производства и контроля ISO 9001',
+            'Форма прямого приёма крупных оптовых заказов и экспортных контрактов'
+          ]
+        }
+      }
     },
     services: {
       badge: 'УСЛУГИ И СТОИМОСТЬ',
@@ -137,7 +175,45 @@ export const translations = {
       btnMore: 'Batafsil',
       speed: 'Tezlik',
       ui: 'Tillar / UI',
-      std: 'Standart'
+      std: 'Standart',
+      items: {
+        stanford: {
+          category: 'Onlayn til maktabi',
+          badge: 'EdTech & Veb Platforma',
+          description: 'Stanford til maktabining ta\'lim veb-portali, talaba shaxsiy kabineti, ingliz tili kurslariga yozilish va interaktiv test tizimi.',
+          stats: { speed: '99/100 Lighthouse', ux: 'Moslashuvchan UI', security: 'SSL & Auth' },
+          deliverables: [
+            'Til kurslari va tayyorgarlik dasturlari katalogi',
+            'Talabalar shaxsiy kabineti va onlayn ro\'yxatdan o\'tish',
+            'Bilim darajasini aniqlash test tizimi integratsiyasi',
+            'Barcha qurilmalarga moslashuvchan va tezkor ishlash'
+          ]
+        },
+        yoshlar: {
+          category: 'Ilmiy-tashxisiy platforma',
+          badge: 'Davlat AI-tizimi',
+          description: 'Shahar xavfsizligining intellektual tahlili va Sirdaryo viloyati yoshlarini qo\'llab-quvvatlash hamda huquqbuzarliklar profilaktikasi uchun platforma.',
+          stats: { speed: 'Real-time AI', ux: 'Ko\'p tilli (UZ/RU)', security: 'Demo Platforma' },
+          deliverables: [
+            'Shahar xavfsizligining intellektual tahlili va monitoringi',
+            'Sirdaryo viloyati 10 ta mahalla tuzilmasi monitoringi',
+            'Hujjatlar va ma\'lumotlarni yuklab olish (API Hujjatlari)',
+            'Ko\'p tilli interfeys (O\'zbekcha UZ / Ruscha RU)'
+          ]
+        },
+        saruno: {
+          category: 'Sanoat un ishlab chiqarish',
+          badge: 'Zavod va Ulgurji platforma',
+          description: 'SARUNO un zavodi (Zarbdor, Jizzax) uchun yuqori texnologiyali veb-sayt. Ko\'p tilli interfeys (RU/EN/UZ), ishlab chiqarish galereyasi va ulgurji buyurtmalar.',
+          stats: { speed: '100/100 Tezlik', ux: 'RU / EN / UZ', security: 'ISO Sertifikatlangan' },
+          deliverables: [
+            'Zarbdor un zavodi taqdimoti (kunlik quvvati 200 tonna)',
+            'Mahsulotlar katalogi (Oliy nav, Birinchi nav, B2B maxsus un)',
+            'Avtomatlashtirilgan ISO 9001 ishlab chiqarish liniyalari galereyasi',
+            'Katta ulgurji buyurtmalar va eksport shartnomalari formasi'
+          ]
+        }
+      }
     },
     services: {
       badge: 'XIZMATLAR VA NARXLAR',
@@ -232,7 +308,45 @@ export const translations = {
       btnMore: 'View Details',
       speed: 'Speed',
       ui: 'Languages / UI',
-      std: 'Standard'
+      std: 'Standard',
+      items: {
+        stanford: {
+          category: 'Language Online School',
+          badge: 'EdTech & Web Platform',
+          description: 'Educational web portal for Stanford Language School featuring student portal, English course enrollment, and interactive placement testing.',
+          stats: { speed: '99/100 Lighthouse', ux: 'Responsive UI', security: 'SSL & Auth' },
+          deliverables: [
+            'Language courses and preparation programs catalog',
+            'Student personal portals and online enrollment',
+            'Knowledge level placement test integration',
+            'Fast response and full device responsiveness'
+          ]
+        },
+        yoshlar: {
+          category: 'Scientific Diagnostic Platform',
+          badge: 'Government AI System',
+          description: 'Intellectual analysis of urban safety and scientific diagnostic platform for monitoring, crime prevention, and youth support in Syrdarya region.',
+          stats: { speed: 'Real-time AI', ux: 'Multilingual (UZ/RU)', security: 'Demo Platform' },
+          deliverables: [
+            'Intellectual urban safety analysis (Shahar Xavfsizligining Intellektual Tahlili)',
+            'Monitoring 10 neighborhood mahalla structures in Syrdarya region',
+            'Document and data export API integration (API Hujjatlari)',
+            'Multilingual interface (Uzbek UZ / Russian RU)'
+          ]
+        },
+        saruno: {
+          category: 'Industrial Flour Production',
+          badge: 'Factory & Wholesale Platform',
+          description: 'High-tech corporate website for SARUNO flour milling factory (Zarbdar, Jizzakh). Multilingual interface (RU/EN/UZ), factory gallery, and wholesale orders.',
+          stats: { speed: '100/100 Speed', ux: 'RU / EN / UZ', security: 'ISO Certified' },
+          deliverables: [
+            'Zarbdar flour mill factory showcase (200 tons daily capacity)',
+            'Products catalog (Premium grade, First grade, B2B custom flour)',
+            'Automated ISO 9001 production line and quality control gallery',
+            'Direct wholesale orders and export contract inquiry form'
+          ]
+        }
+      }
     },
     services: {
       badge: 'SERVICES & PRICING',

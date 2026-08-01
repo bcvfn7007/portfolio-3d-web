@@ -1,93 +1,54 @@
-import React, { useState } from 'react';
-import { ExternalLink, Eye, Layers, Shield, GraduationCap, Factory, CheckCircle } from 'lucide-react';
+import React from 'react';
+import { ExternalLink, Eye, Layers, Shield, GraduationCap, Factory } from 'lucide-react';
 import { translations } from '../utils/translations';
 
 export default function PortfolioSection({ onSelectProject, currentLang }) {
   const t = translations[currentLang]?.portfolio || translations.RU.portfolio;
 
-  const projects = [
+  const rawProjects = [
     {
       id: 'stanford',
       title: 'Stanford School',
-      category: 'Языковая онлайн-школа',
-      badge: 'EdTech & Web Platform',
-      description:
-        'Обучающий веб-портал языковой школы Stanford с личным кабинетом студента, записью на курсы английского языка и интерактивной системой тестирования.',
       image: '/assets/stanford.png',
       tags: ['React', 'Node.js', 'PostgreSQL', 'TailwindCSS', 'GSAP'],
-      stats: {
-        speed: '99/100 Lighthouse',
-        ux: 'Адаптивный UI',
-        security: 'SSL & Auth'
-      },
       icon: GraduationCap,
       color: 'from-pink-500 to-purple-600',
-      demoUrl: 'https://stanfordschool.onrender.com/',
-      details: {
-        client: 'Stanford School Learning Center',
-        deliverables: [
-          'Каталог языковых курсов и программ подготовки',
-          'Личные кабинеты студентов и онлайн-запись',
-          'Интеграция тестирования уровня знаний',
-          'Быстрый отклик и адаптивность под все устройства'
-        ]
-      }
+      demoUrl: 'https://stanfordschool.onrender.com/'
     },
     {
       id: 'yoshlar',
       title: 'Yoshlar Qalqoni AI Platform',
-      category: 'Научно-диагностическая платформа',
-      badge: 'Государственная ИИ-система',
-      description:
-        'Интеллектуальный анализ городской безопасности и научно-диагностическая платформа для мониторинга, профилактики правонарушений и поддержки молодежи Сырдарьинской области.',
       image: '/assets/yoshlar.png',
       tags: ['React', 'AI Analytics', 'Node.js', 'API Integration', 'Dark Theme UI'],
-      stats: {
-        speed: 'Real-time AI',
-        ux: 'Multilingual (UZ/RU)',
-        security: 'Demo Platform'
-      },
       icon: Shield,
       color: 'from-cyan-500 to-blue-600',
-      demoUrl: 'https://yoshlar-yetakchisi.onrender.com/',
-      details: {
-        client: 'Yoshlar Qalqoni Science & AI Center',
-        deliverables: [
-          'Интеллектуальный анализ городской безопасности (Shahar Xavfsizligining Intellektual Tahlili)',
-          'Мониторинг 10 махаллинских структур Сырдарьинской области',
-          'Интеграция выгрузки данных и документов (API Hujjatlari)',
-          'Мультиязычный интерфейс (Узбекский UZ / Русский RU)'
-        ]
-      }
+      demoUrl: 'https://yoshlar-yetakchisi.onrender.com/'
     },
     {
       id: 'saruno',
       title: 'SARUNO | Mira Miller',
-      category: 'Промышленное производство муки',
-      badge: 'Завод и Оптовая платформа',
-      description:
-        'Высокотехнологичный веб-сайт для мукомольного завода SARUNO (Зарбдар, Джизак). Мульти-язычный интерфейс (RU/EN/UZ), галерея производства, каталог и оптовые заказы.',
       image: '/assets/projects/saruno.png',
       tags: ['HTML5/CSS3', 'JavaScript', 'Multilingual (RU/EN/UZ)', 'Responsive', 'B2B Catalog'],
-      stats: {
-        speed: '100/100 Speed',
-        ux: 'RU / EN / UZ',
-        security: 'ISO Certified'
-      },
       icon: Factory,
       color: 'from-amber-500 to-amber-700',
-      demoUrl: 'https://sarunomiramiller.netlify.app/',
-      details: {
-        client: 'SARUNO Mira Miller Flour Factory',
-        deliverables: [
-          'Презентация мукомольного завода Зарбдар (мощность 200 тонн в день)',
-          'Каталог продукции (Мука Высший сорт, Первый сорт, Специализированная B2B)',
-          'Галерея автоматизированных линий производства и контроля ISO 9001',
-          'Форма прямого приёма крупных оптовых заказов и экспортных контрактов'
-        ]
-      }
+      demoUrl: 'https://sarunomiramiller.netlify.app/'
     }
   ];
+
+  const projects = rawProjects.map((p) => {
+    const translatedItem = t.items?.[p.id] || translations.RU.portfolio.items[p.id];
+    return {
+      ...p,
+      category: translatedItem.category,
+      badge: translatedItem.badge,
+      description: translatedItem.description,
+      stats: translatedItem.stats,
+      details: {
+        client: p.title,
+        deliverables: translatedItem.deliverables
+      }
+    };
+  });
 
   return (
     <section id="portfolio" className="py-24 relative overflow-hidden">
