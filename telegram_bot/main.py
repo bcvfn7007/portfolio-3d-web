@@ -19,176 +19,160 @@ from aiogram.types import (
 # Load environment variables
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ")
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176")
 PORT = int(os.getenv("PORT", 8080))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# FSM States for Interactive Order Wizard
-class OrderForm(StatesGroup):
-    project_type = State()
-    timeline = State()
-    budget = State()
-    description = State()
-    contact = State()
+# FSM States for Interactive Dialog Wizard
+class ServiceWizard(StatesGroup):
+    selected_service = State()
+    task_description = State()
+    contact_info = State()
 
-# Keyboards
+# Main Keyboard with requested buttons
 def get_main_menu_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="🚀 Заказать разработку")],
-            [KeyboardButton(text="💼 Мои проекты"), KeyboardButton(text="💬 Прямая связь")]
+            [KeyboardButton(text="🌐 Хочу сайт"), KeyboardButton(text="🤖 Хочу Telegram-бота")],
+            [KeyboardButton(text="💰 Узнать цены")]
         ],
         resize_keyboard=True
     )
 
-def get_project_types_keyboard():
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="🌐 Лендинг / Промо-сайт", callback_data="type_landing")],
-            [InlineKeyboardButton(text="🖥 Многостраничный Web App", callback_data="type_webapp")],
-            [InlineKeyboardButton(text="🤖 Telegram-бот (продажи/авто)", callback_data="type_bot")],
-            [InlineKeyboardButton(text="📱 Telegram Mini App (TMA)", callback_data="type_tma")]
-        ]
+def get_contact_keyboard():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="📱 Поделиться контактом", request_contact=True)],
+            [KeyboardButton(text="❌ Отмена")]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
     )
 
-def get_timeline_keyboard():
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="⚡ Срочно (2-3 дня)", callback_data="time_urgent")],
-            [InlineKeyboardButton(text="📅 Стандартно (5-7 дней)", callback_data="time_normal")],
-            [InlineKeyboardButton(text="🤝 Не горит / Обсудим", callback_data="time_flexible")]
-        ]
-    )
-
-# Bot & Dispatcher setup
 dp = Dispatcher()
 
+# /start command handler
 @dp.message(CommandStart())
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message, state: FSMContext):
+    await state.clear()
     welcome_text = (
         f"👋 <b>Здравствуйте, {message.from_user.first_name}!</b>\n\n"
-        "Я официальный бот для приёма заказов на разработку сайтов, "
-        "веб-сервисов и Telegram-ботов.\n\n"
-        "Вы можете рассчитать стоимость или сразу оставить заявку на разработку."
+        "Я официальный бот разработчика для приёма заказов.\n"
+        "Выберите услугу ниже или узнайте стоимость разработки:"
     )
     await message.answer(welcome_text, parse_mode="HTML", reply_markup=get_main_menu_keyboard())
 
-@dp.message(F.text == "💬 Прямая связь")
-async def cmd_direct_contact(message: types.Message):
+# "Узнать цены" button handler
+@dp.message(F.text == "💰 Узнать цены")
+async def cmd_pricing(message: types.Message):
+    pricing_text = (
+        "📊 <b>Прайс-лист на разработку:</b>\n\n"
+        "🌐 <b>Сайты и Лендинги:</b> от $250\n"
+        "• Промо-страницы, корпоративные сайты и многостраничники под ключ.\n"
+        "• <i>Сроки: от 3 до 5 дней</i>\n\n"
+        "🤖 <b>Telegram-боты:</b> от $200\n"
+        "• Боты для приёма заказов, платежей, CRM и авто-воронок.\n"
+        "• <i>Сроки: от 3 до 7 дней</i>\n\n"
+        "📱 <b>Telegram Mini Apps (TMA):</b> от $400\n"
+        "• Полноценные веб-приложения внутри Telegram.\n"
+        "• <i>Сроки: от 5 до 7 дней</i>\n\n"
+        "💡 <i>Все проекты включают чистый код, адаптивность и гарантию работы!</i>"
+    )
+    
+    inline_kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🌐 Хочу сайт", callback_data="wizard_site")],
+            [InlineKeyboardButton(text="🤖 Хочу Telegram-бота", callback_data="wizard_bot")]
+        ]
+    )
+    await message.answer(pricing_text, parse_mode="HTML", reply_markup=inline_kb)
+
+# Handle "Хочу сайт" & "Хочу Telegram-бота" (Text or Inline Callback)
+@dp.message(F.text.in_({"🌐 Хочу сайт", "🤖 Хочу Telegram-бота"}))
+async def start_service_wizard(message: types.Message, state: FSMContext):
+    service = "Сайт / Лендинг" if "сайт" in message.text.lower() else "Telegram-бот"
+    await state.update_data(selected_service=service)
+    await state.set_state(ServiceWizard.task_description)
+
     await message.answer(
-        "💬 <b>Прямая связь с разработчиком:</b>\n\n"
-        "Telegram: @o_o_developer\n"
-        "Instagram: https://instagram.com/dev__man23/\n"
-        "Kwork: https://kwork.ru/user/bcvfn23",
+        f"✅ <b>Выбрано:</b> {service}\n\n"
+        "📝 <b>Шаг 1 из 2:</b> Кратко опишите вашу задачу (что нужно сделать, пожелания по сайту или боту):",
         parse_mode="HTML",
-        disable_web_page_preview=True
+        reply_markup=ReplyKeyboardRemove()
     )
 
-@dp.message(F.text == "💼 Мои проекты")
-async def cmd_portfolio(message: types.Message):
-    text = (
-        "💼 <b>Реализованные проекты:</b>\n\n"
-        "1️⃣ <b>Stanford School</b> — Обучающая платформа языковой школы\n"
-        "🔗 https://stanfordschool.onrender.com/\n\n"
-        "2️⃣ <b>Yoshlar Qalqoni AI Platform</b> — Научно-диагностическая платформа ИИ\n"
-        "🔗 https://yoshlar-yetakchisi.onrender.com/"
-    )
-    await message.answer(text, parse_mode="HTML", disable_web_page_preview=True)
-
-# Order Wizard Handler
-@dp.message(F.text == "🚀 Заказать разработку")
-async def start_order_wizard(message: types.Message, state: FSMContext):
-    await state.set_state(OrderForm.project_type)
-    await message.answer(
-        "📌 <b>Шаг 1 из 5:</b> Выберите тип проекта, который вам нужен:",
-        parse_mode="HTML",
-        reply_markup=get_project_types_keyboard()
-    )
-
-@dp.callback_query(OrderForm.project_type, F.data.startswith("type_"))
-async def process_project_type(callback: types.CallbackQuery, state: FSMContext):
-    type_map = {
-        "type_landing": "Лендинг / Промо-сайт",
-        "type_webapp": "Многостраничный Web App",
-        "type_bot": "Telegram-бот (продажи/автоматизация)",
-        "type_tma": "Telegram Mini App (TMA)"
-    }
-    selected = type_map.get(callback.data, "Разработка")
-    await state.update_data(project_type=selected)
-    await state.set_state(OrderForm.timeline)
+@dp.callback_query(F.data.in_({"wizard_site", "wizard_bot"}))
+async def callback_service_wizard(callback: types.CallbackQuery, state: FSMContext):
+    service = "Сайт / Лендинг" if callback.data == "wizard_site" else "Telegram-бот"
+    await state.update_data(selected_service=service)
+    await state.set_state(ServiceWizard.task_description)
 
     await callback.message.edit_text(
-        f"✅ <b>Тип проекта:</b> {selected}\n\n"
-        "⏱ <b>Шаг 2 из 5:</b> Укажите желаемые сроки:",
+        f"✅ <b>Выбрано:</b> {service}\n\n"
+        "📝 <b>Шаг 1 из 2:</b> Кратко опишите вашу задачу (что нужно сделать, пожелания по сайту или боту):",
+        parse_mode="HTML"
+    )
+
+# Step 1: Collect Task Description
+@dp.message(ServiceWizard.task_description)
+async def process_task_description(message: types.Message, state: FSMContext):
+    if message.text == "❌ Отмена":
+        await state.clear()
+        await message.answer("Отменено.", reply_markup=get_main_menu_keyboard())
+        return
+
+    await state.update_data(task_description=message.text)
+    await state.set_state(ServiceWizard.contact_info)
+
+    await message.answer(
+        "📞 <b>Шаг 2 из 2:</b> Укажите ваш контакт для связи.\n"
+        "Вы можете нажать кнопку ниже, чтобы поделиться телефоном, или введите ваш Telegram / номер вручную:",
         parse_mode="HTML",
-        reply_markup=get_timeline_keyboard()
+        reply_markup=get_contact_keyboard()
     )
 
-@dp.callback_query(OrderForm.timeline, F.data.startswith("time_"))
-async def process_timeline(callback: types.CallbackQuery, state: FSMContext):
-    time_map = {
-        "time_urgent": "Срочно (2-3 дня)",
-        "time_normal": "Стандартно (5-7 дней)",
-        "time_flexible": "Гибкие сроки"
-    }
-    selected = time_map.get(callback.data, "Стандартно")
-    await state.update_data(timeline=selected)
-    await state.set_state(OrderForm.budget)
+# Step 2: Collect Contact (Contact Button or Text)
+@dp.message(ServiceWizard.contact_info)
+async def process_contact_info(message: types.Message, state: FSMContext, bot: Bot):
+    if message.text == "❌ Отмена":
+        await state.clear()
+        await message.answer("Отменено.", reply_markup=get_main_menu_keyboard())
+        return
 
-    await callback.message.edit_text(
-        f"✅ <b>Сроки:</b> {selected}\n\n"
-        "💰 <b>Шаг 3 из 5:</b> Укажите примерный бюджет (например: $250 - $400):",
-        parse_mode="HTML"
-    )
-
-@dp.message(OrderForm.budget)
-async def process_budget(message: types.Message, state: FSMContext):
-    await state.update_data(budget=message.text)
-    await state.set_state(OrderForm.description)
-    await message.answer(
-        "📝 <b>Шаг 4 из 5:</b> Напишите краткое описание задачи или ваши пожелания (или отправьте '-'):",
-        parse_mode="HTML"
-    )
-
-@dp.message(OrderForm.description)
-async def process_description(message: types.Message, state: FSMContext):
-    await state.update_data(description=message.text)
-    await state.set_state(OrderForm.contact)
-    await message.answer(
-        "📞 <b>Шаг 5 из 5:</b> Укажите ваш контакт для связи (Telegram / Телефон):",
-        parse_mode="HTML"
-    )
-
-@dp.message(OrderForm.contact)
-async def process_contact(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
-    user_contact = message.text
+    service = data.get("selected_service", "Разработка")
+    task_desc = data.get("task_description", "Не указано")
+
     user = message.from_user
+    client_name = user.full_name or user.first_name or "Клиент"
+    
+    # Check if contact was shared via button or typed manually
+    if message.contact:
+        contact_text = f"📱 {message.contact.phone_number}"
+    else:
+        contact_text = message.text
 
-    # Finish FSM state
+    user_username = f"@{user.username}" if user.username else f"ID: {user.id}"
+
+    # Clear state and reply to client
     await state.clear()
-
     await message.answer(
-        "🎉 <b>Спасибо! Заявка успешно принята.</b>\n\n"
-        "Я уже получил ваше обращение и отвечу вам в ближайшее время!",
-        parse_mode="HTML",
+        "Спасибо! Я свяжусь с вами в ближайшее время.",
         reply_markup=get_main_menu_keyboard()
     )
 
-    # Format notification for Admin
+    # Send formatted lead card to Owner (ADMIN_CHAT_ID)
     if ADMIN_CHAT_ID:
-        client_handle = f"@{user.username}" if user.username else f"ID: {user.id}"
         admin_card = (
             "🚨 <b>НОВАЯ ЗАЯВКА ИЗ TELEGRAM-БОТА!</b>\n\n"
-            f"👤 <b>Клиент:</b> {user.full_name} ({client_handle})\n"
-            f"📞 <b>Контакт:</b> {user_contact}\n"
-            f"📌 <b>Тип проекта:</b> {data.get('project_type')}\n"
-            f"⏱ <b>Сроки:</b> {data.get('timeline')}\n"
-            f"💰 <b>Бюджет:</b> {data.get('budget')}\n"
-            f"📝 <b>Описание:</b> {data.get('description')}\n"
+            f"👤 <b>Имя клиента:</b> {client_name}\n"
+            f"💬 <b>Telegram:</b> {user_username}\n"
+            f"📞 <b>Контакт:</b> {contact_text}\n"
+            f"📌 <b>Выбранная услуга:</b> {service}\n"
+            f"📝 <b>Описание задачи:</b>\n{task_desc}"
         )
 
         admin_keyboard = InlineKeyboardMarkup(
@@ -208,9 +192,9 @@ async def process_contact(message: types.Message, state: FSMContext, bot: Bot):
                 reply_markup=admin_keyboard
             )
         except Exception as e:
-            logger.error(f"Failed to send admin notification: {e}")
+            logger.error(f"Failed to send admin lead notification: {e}")
 
-# HTTP Webhook Endpoint for Website Lead Submissions
+# HTTP Webhook API for Website Leads
 async def handle_web_lead(request):
     try:
         data = await request.json()
@@ -235,8 +219,7 @@ async def handle_web_lead(request):
 
 async def main():
     if not BOT_TOKEN:
-        print("⚠️ ERROR: BOT_TOKEN is missing in environment variables or .env file!")
-        print("Please edit telegram_bot/.env and set your BOT_TOKEN from @BotFather.")
+        print("⚠️ ERROR: BOT_TOKEN is missing!")
         return
 
     bot = Bot(token=BOT_TOKEN)
@@ -252,7 +235,7 @@ async def main():
     await site.start()
     logger.info(f"HTTP Server listening for Web Leads on port {PORT}")
 
-    print("🚀 Telegram Order Intake Bot started successfully!")
+    print("🚀 Telegram Order Intake Bot started successfully with scenario!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
