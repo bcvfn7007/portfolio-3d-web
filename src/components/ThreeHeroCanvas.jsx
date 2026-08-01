@@ -18,16 +18,24 @@ export default function ThreeHeroCanvas() {
       0.1,
       1000
     );
-    camera.position.z = 6;
+    camera.position.z = 5.8;
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    // Optimized Renderer setup (Capped pixel ratio for mobile performance)
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
-    // 3D Geometry: TorusKnot
-    const geometry = new THREE.TorusKnotGeometry(1.2, 0.38, 128, 32, 2, 3);
+    // Responsive Geometry: TorusKnot
+    const isMobile = window.innerWidth < 768;
+    const geometry = new THREE.TorusKnotGeometry(
+      isMobile ? 1.0 : 1.2,
+      isMobile ? 0.32 : 0.38,
+      isMobile ? 96 : 128,
+      isMobile ? 24 : 32,
+      2,
+      3
+    );
 
     // Custom Physical Material with glossy metallic pink-purple sheen
     const material = new THREE.MeshPhysicalMaterial({
@@ -44,7 +52,7 @@ export default function ThreeHeroCanvas() {
     const torusKnot = new THREE.Mesh(geometry, material);
     scene.add(torusKnot);
 
-    // Lighting
+    // Lighting setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
@@ -63,30 +71,40 @@ export default function ThreeHeroCanvas() {
     lightCyan.position.set(0, 5, -2);
     scene.add(lightCyan);
 
-    // Mouse Interaction
+    // Interaction Handlers (Mouse & Touch for Mobile)
     let mouseX = 0;
     let mouseY = 0;
     let targetRotationX = 0;
     let targetRotationY = 0;
 
-    const onMouseMove = (e) => {
+    const handlePointerMove = (clientX, clientY) => {
       const windowHalfX = window.innerWidth / 2;
       const windowHalfY = window.innerHeight / 2;
-      mouseX = (e.clientX - windowHalfX) / windowHalfX;
-      mouseY = (e.clientY - windowHalfY) / windowHalfY;
+      mouseX = (clientX - windowHalfX) / windowHalfX;
+      mouseY = (clientY - windowHalfY) / windowHalfY;
 
-      targetRotationY = mouseX * 0.8;
-      targetRotationX = mouseY * 0.8;
+      targetRotationY = mouseX * 0.7;
+      targetRotationX = mouseY * 0.7;
+    };
+
+    const onMouseMove = (e) => handlePointerMove(e.clientX, e.clientY);
+    const onTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
 
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     // Resize Handler
     const handleResize = () => {
       if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(width, height);
     };
 
     window.addEventListener('resize', handleResize);
@@ -100,14 +118,14 @@ export default function ThreeHeroCanvas() {
 
       // Continuous rotation
       torusKnot.rotation.x += 0.005;
-      torusKnot.rotation.y += 0.008;
+      torusKnot.rotation.y += 0.007;
 
-      // Mouse tilt smooth lerp
+      // Smooth tilt lerp
       torusKnot.rotation.y += (targetRotationY - torusKnot.rotation.y) * 0.05;
       torusKnot.rotation.x += (targetRotationX - torusKnot.rotation.x) * 0.05;
 
       // Floating wave movement
-      torusKnot.position.y = Math.sin(elapsedTime * 1.5) * 0.15;
+      torusKnot.position.y = Math.sin(elapsedTime * 1.4) * 0.12;
 
       renderer.render(scene, camera);
       animId = requestAnimationFrame(animate);
@@ -117,6 +135,7 @@ export default function ThreeHeroCanvas() {
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animId);
       if (container && renderer.domElement) {
@@ -128,5 +147,5 @@ export default function ThreeHeroCanvas() {
     };
   }, []);
 
-  return <div ref={mountRef} className="w-full h-full min-h-[350px] md:min-h-[450px]" />;
+  return <div ref={mountRef} className="w-full h-[280px] sm:h-[360px] lg:h-[460px] touch-none" />;
 }
