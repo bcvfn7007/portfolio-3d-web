@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Mail, MessageSquare, Instagram, CheckCircle2, Copy, ExternalLink, Briefcase } from 'lucide-react';
+import { Send, Mail, MessageSquare, Instagram, CheckCircle2, Copy, ExternalLink, Briefcase, Bot } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function ContactSection({ prefilledSummary }) {
@@ -61,7 +61,7 @@ export default function ContactSection({ prefilledSummary }) {
             Начнём ваш <span className="gradient-text-pink">проект</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Напишите мне в Telegram, Instagram или через Kwork — отвечу на все вопросы и помогу с ТЗ.
+            Напишите мне лично в Telegram, запустите авто-бота или оставьте заявку в форме.
           </p>
         </div>
 
@@ -71,15 +71,14 @@ export default function ContactSection({ prefilledSummary }) {
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="glass-card p-8 space-y-6">
               <h3 className="text-2xl font-bold font-syne text-white">
-                Прямая связь
+                Прямая связь и Заказ
               </h3>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
-                Самый быстрый способ обсудить задачу — написать в Telegram или Instagram. 
-                Я отвечу на все вопросы по разработке сайтов и ботов.
+                Самый быстрый способ обсудить задачу — написать мне лично или оформить расчет через бота.
               </p>
 
               <div className="space-y-3 pt-2">
-                {/* Telegram Direct Magnetic Button */}
+                {/* Telegram Personal Direct Magnetic Button */}
                 <a
                   href="https://t.me/o_o_developer"
                   target="_blank"
@@ -92,11 +91,31 @@ export default function ContactSection({ prefilledSummary }) {
                       <Send className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs opacity-80 font-mono">Telegram Username:</span>
+                      <span className="text-xs opacity-80 font-mono">Личный Telegram:</span>
                       <span className="text-sm font-bold">@o_o_developer</span>
                     </div>
                   </div>
                   <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                </a>
+
+                {/* Telegram Order Bot Button */}
+                <a
+                  href="https://t.me/zakaz_priyom_bot"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full p-4 rounded-2xl glass-card border-pink-500/30 hover:border-pink-500/60 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer bg-pink-500/10"
+                  data-cursor="BOT"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
+                      <Bot className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs opacity-80 font-mono text-pink-300">Бот приёма заказов:</span>
+                      <span className="text-sm font-bold text-white">@zakaz_priyom_bot</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-pink-400 group-hover:translate-x-0.5 transition-transform" />
                 </a>
 
                 {/* Instagram Direct Link */}
@@ -104,11 +123,11 @@ export default function ContactSection({ prefilledSummary }) {
                   href="https://instagram.com/dev__man23/"
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full p-4 rounded-2xl glass-card border-white/10 hover:border-pink-500/40 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer"
+                  className="w-full p-4 rounded-2xl glass-card border-white/10 hover:border-purple-500/40 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer"
                   data-cursor="INSTA"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
                       <Instagram className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
@@ -162,7 +181,7 @@ export default function ContactSection({ prefilledSummary }) {
                     Сообщение отправлено!
                   </h4>
                   <p className="text-slate-300 text-sm max-w-md">
-                    Спасибо за обращение. Я получил ваше сообщение и отвечу вам в ближайшее время.
+                    Спасибо за обращение. Я получил ваше сообщение и отвечу вам в Telegram в ближайшее время.
                   </p>
                 </div>
               ) : (
