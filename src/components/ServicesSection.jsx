@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
-import { Globe, Bot, Zap, Cpu, Check, Calculator, ArrowRight, Sparkles, DollarSign, Clock } from 'lucide-react';
+import { Globe, Bot, Zap, Cpu, Check, Calculator, ArrowRight, Sparkles, Clock } from 'lucide-react';
 
 export default function ServicesSection({ onOpenContactWithSummary }) {
-  // Cost Calculator State
+  // Cost Calculator State with requested friendly prices
   const [projectType, setProjectType] = useState('landing');
   const [selectedExtras, setSelectedExtras] = useState(['mobile', 'seo']);
 
   const typeOptions = {
-    landing: { name: 'Лендинг / Промо-сайт', basePrice: 250, baseDays: 3 },
-    webapp: { name: 'Многостраничный сайт / Web App', basePrice: 450, baseDays: 7 },
-    tgbot: { name: 'Telegram-бот (продажи/автоматизация)', basePrice: 200, baseDays: 3 },
-    tgminiapp: { name: 'Telegram Mini App (TMA)', basePrice: 400, baseDays: 6 }
+    landing: { name: 'Эконом Лендинг (1 страница)', basePrice: 20, baseDays: 3 },
+    landing_std: { name: 'Стандарт (Лендинг + SEO + Форма)', basePrice: 35, baseDays: 4 },
+    webapp: { name: 'Бизнес (Сайт под ключ + Админка)', basePrice: 60, baseDays: 5 },
+    tgbot: { name: 'Простой Telegram-бот (автоответчик)', basePrice: 15, baseDays: 3 },
+    tgbot_db: { name: 'Telegram-бот с Базой Данных', basePrice: 30, baseDays: 4 },
+    tgbot_crm: { name: 'Telegram-бот с Интеграциями / CRM', basePrice: 45, baseDays: 5 },
+    tgminiapp: { name: 'Telegram Mini App (TMA веб-приложение)', basePrice: 60, baseDays: 5 }
   };
 
   const extraOptions = [
     { id: 'mobile', name: 'Полная адаптивность под смартфоны', price: 0, days: 0 },
     { id: 'seo', name: 'Базовое SEO и мета-теги', price: 0, days: 0 },
-    { id: 'three3d', name: '3D элементы и Three.js эффекты', price: 100, days: 2 },
-    { id: 'admin', name: 'Панель администратора (CMS)', price: 120, days: 3 },
-    { id: 'payments', name: 'Подключение онлайн-оплаты (Payme/Click/Stripe)', price: 90, days: 2 },
-    { id: 'ai', name: 'Интеграция ИИ (OpenAI / ChatGPT)', price: 110, days: 2 }
+    { id: 'three3d', name: '3D элементы и эффекты (Three.js)', price: 15, days: 1 },
+    { id: 'admin', name: 'Панель администратора (CMS)', price: 20, days: 2 },
+    { id: 'payments', name: 'Подключение онлайн-оплаты (Payme/Click)', price: 15, days: 1 },
+    { id: 'ai', name: 'Интеграция ИИ (OpenAI / ChatGPT)', price: 20, days: 1 }
   ];
 
   const toggleExtra = (id) => {
@@ -51,7 +54,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
       .filter(Boolean)
       .join(', ');
 
-    const summary = `Расчёт стоимости: ${currentBase.name}\nДоп. опции: ${extrasNames}\nОриентир бюджета: ~$${calculatedPrice}\nСрок: ~${daysTotal} дн.`;
+    const summary = `Расчёт стоимости: ${currentBase.name}\nОпции: ${extrasNames}\nОриентир бюджета: ~$${calculatedPrice}\nСрок: ~${daysTotal} дн.`;
     onOpenContactWithSummary(summary);
   };
 
@@ -71,7 +74,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
             Решения для вашего <span className="gradient-text-pink">бизнеса</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Прозрачное ценообразование, фиксированные сроки и индивидуальный подход.
+            Прозрачное ценообразование, фиксированные сроки и доступные тарифы.
           </p>
         </div>
 
@@ -88,7 +91,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   <Globe className="w-7 h-7" />
                 </div>
                 <span className="px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 font-syne font-bold text-sm">
-                  от $250
+                  от $20
                 </span>
               </div>
 
@@ -97,33 +100,35 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   Сайты и Лендинги
                 </h3>
                 <p className="text-slate-300 text-sm sm:text-base mt-2 font-light leading-relaxed">
-                  Разработка стильных, высококонверсионных веб-сайтов под ключ. От лаконичных промо-страниц 
-                  до сложных многостраничных порталов с 3D-графикой и онлайн-оплатой.
+                  Разработка стильных, быстродействующих веб-сайтов под ключ. От лаконичных промо-страниц 
+                  до бизнес-сайтов с админ-панелью и онлайн-оплатой.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {[
-                  'Промо-лендинги с высокой конверсией',
-                  'Корпоративные многостраничные сайты',
-                  'Интернет-магазины & Web-приложения',
-                  'Интерактивная 3D-графика (Three.js)',
-                  'Адаптированность под смартфоны & SEO',
-                  'Быстрый запуск (от 3-5 дней)'
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm">
-                    <Check className="w-4 h-4 text-pink-400 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
+                  <span className="text-xs font-bold text-pink-400">Эконом</span>
+                  <span className="text-xs text-white font-mono">$20 - $25</span>
+                  <span className="text-[11px] text-slate-400">Простой лендинг, 1 стр.</span>
+                </div>
+                <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
+                  <span className="text-xs font-bold text-purple-400">Стандарт</span>
+                  <span className="text-xs text-white font-mono">$35 - $40</span>
+                  <span className="text-[11px] text-slate-400">Лендинг + SEO + Форма</span>
+                </div>
+                <div className="glass-card p-3 border-white/10 flex flex-col space-y-1">
+                  <span className="text-xs font-bold text-cyan-400">Бизнес</span>
+                  <span className="text-xs text-white font-mono">$60 - $70</span>
+                  <span className="text-[11px] text-slate-400">Сайт под ключ + Админка</span>
+                </div>
               </div>
             </div>
 
             <div className="pt-6 border-t border-white/10 flex items-center justify-between mt-6">
-              <span className="text-xs text-slate-400 font-mono">Срок: от 3 до 10 дней</span>
+              <span className="text-xs text-slate-400 font-mono">Срок: от 3 до 5 дней</span>
               <button
                 onClick={() => onOpenContactWithSummary('Интересует разработка сайта / лендинга')}
-                className="text-xs font-bold text-pink-400 hover:text-pink-300 flex items-center gap-1 transition-colors"
+                className="text-xs font-bold text-pink-400 hover:text-pink-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span>Обсудить сайт</span>
                 <ArrowRight className="w-4 h-4" />
@@ -141,7 +146,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   <Bot className="w-7 h-7" />
                 </div>
                 <span className="px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 font-syne font-bold text-sm">
-                  от $200
+                  от $15
                 </span>
               </div>
 
@@ -150,22 +155,27 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   Telegram-боты
                 </h3>
                 <p className="text-slate-300 text-sm mt-2 font-light leading-relaxed">
-                  Автоматизация продаж, прием заявок, интеграции с CRM и полноценные Web Apps внутри Telegram (TMA).
+                  Автоматизация продаж, приём заявок, боты с БД и Telegram Mini Apps (TMA).
                 </p>
               </div>
 
-              <div className="space-y-2.5 pt-2">
-                {[
-                  'Боты для приёма заказов и оплаты',
-                  'Telegram Mini Apps (TMA web-приложения)',
-                  'Уведомления и авто-воронки',
-                  'Интеграция с OpenAI / ChatGPT'
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm">
-                    <Check className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+              <div className="space-y-2 pt-2">
+                <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-1.5">
+                  <span>Простой (анкета/авто)</span>
+                  <span className="font-mono text-pink-400 font-bold">$15 - $20</span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-1.5">
+                  <span>С базой данных</span>
+                  <span className="font-mono text-purple-400 font-bold">$30 - $35</span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-1.5">
+                  <span>Интеграции / CRM</span>
+                  <span className="font-mono text-cyan-400 font-bold">$45 - $50</span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-slate-300 pt-1">
+                  <span>Telegram Mini Apps (TMA)</span>
+                  <span className="font-mono text-emerald-400 font-bold">от $60</span>
+                </div>
               </div>
             </div>
 
@@ -173,7 +183,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
               <span className="text-xs text-slate-400 font-mono">Срок: от 3 до 7 дней</span>
               <button
                 onClick={() => onOpenContactWithSummary('Интересует разработка Telegram-бота')}
-                className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors"
+                className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span>Обсудить бота</span>
                 <ArrowRight className="w-4 h-4" />
@@ -189,7 +199,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
             <div>
               <h4 className="text-lg font-bold font-syne text-white">Максимальная скорость (100/100)</h4>
               <p className="text-slate-300 text-xs mt-1 font-light">
-                Оптимизация кода без тормозов. Мгновенная загрузка страниц и плавные анимации даже на слабых устройствах.
+                Оптимизация кода без тормозов. Мгновенная загрузка страниц и плавные анимации на любых устройствах.
               </p>
             </div>
           </div>
@@ -202,7 +212,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
             <div>
               <h4 className="text-lg font-bold font-syne text-white">Умные ИИ-интеграции</h4>
               <p className="text-slate-300 text-xs mt-1 font-light">
-                Подключение нейросетей OpenAI/Claude, сторонних API, платежных шлюзов и автоматическая аналитика данных.
+                Подключение нейросетей OpenAI/Claude, платежных систем (Payme/Click) и автоматическая обработка заявок.
               </p>
             </div>
           </div>
@@ -257,14 +267,14 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                   <button
                     key={key}
                     onClick={() => setProjectType(key)}
-                    className={`w-full text-left p-3.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center justify-between border ${
+                    className={`w-full text-left p-3 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center justify-between border cursor-pointer ${
                       projectType === key
                         ? 'pricing-pill-active border-pink-500'
                         : 'glass-card border-white/10 text-slate-300 hover:border-white/20'
                     }`}
                   >
                     <span>{item.name}</span>
-                    <span className="font-mono text-xs opacity-80">от ${item.basePrice}</span>
+                    <span className="font-mono text-xs opacity-80">${item.basePrice}</span>
                   </button>
                 ))}
               </div>
@@ -282,7 +292,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
                     <button
                       key={opt.id}
                       onClick={() => toggleExtra(opt.id)}
-                      className={`text-left p-3 rounded-xl text-xs transition-all flex items-center justify-between border ${
+                      className={`text-left p-3 rounded-xl text-xs transition-all flex items-center justify-between border cursor-pointer ${
                         isSelected
                           ? 'bg-purple-500/20 border-purple-500 text-white'
                           : 'glass-card border-white/10 text-slate-400 hover:text-slate-200'
@@ -314,7 +324,7 @@ export default function ServicesSection({ onOpenContactWithSummary }) {
               <div className="pt-4 flex justify-end">
                 <button
                   onClick={handleOrderCalculation}
-                  className="magnetic-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-sm shadow-lg shadow-pink-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                  className="magnetic-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-sm shadow-lg shadow-pink-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
                   data-cursor="CALC"
                 >
                   <Sparkles className="w-4 h-4" />

@@ -65,20 +65,20 @@ async def cmd_start(message: types.Message, state: FSMContext):
     )
     await message.answer(welcome_text, parse_mode="HTML", reply_markup=get_main_menu_keyboard())
 
-# "Узнать цены" button handler
+# "Узнать цены" button handler - Updated Exact Pricing Text
 @dp.message(F.text == "💰 Узнать цены")
 async def cmd_pricing(message: types.Message):
     pricing_text = (
-        "📊 <b>Прайс-лист на разработку:</b>\n\n"
-        "🌐 <b>Сайты и Лендинги:</b> от $250\n"
-        "• Промо-страницы, корпоративные сайты и многостраничники под ключ.\n"
-        "• <i>Сроки: от 3 до 5 дней</i>\n\n"
-        "🤖 <b>Telegram-боты:</b> от $200\n"
-        "• Боты для приёма заказов, платежей, CRM и авто-воронок.\n"
-        "• <i>Сроки: от 3 до 7 дней</i>\n\n"
-        "📱 <b>Telegram Mini Apps (TMA):</b> от $400\n"
-        "• Полноценные веб-приложения внутри Telegram.\n"
-        "• <i>Сроки: от 5 до 7 дней</i>\n\n"
+        "💰 <b>Прайс-лист на разработку:</b>\n\n"
+        "🌐 <b>Сайты и Лендинги:</b> от $20\n"
+        "- Промо-страницы, корпоративные сайты и многостраничники под ключ.\n"
+        "- <i>Сроки: от 3 до 5 дней</i>\n\n"
+        "🤖 <b>Telegram-боты:</b> от $15\n"
+        "- Боты для приёма заказов, платежей, CRM и авто-воронок.\n"
+        "- <i>Сроки: от 3 до 7 дней</i>\n\n"
+        "📱 <b>Telegram Mini Apps (TMA):</b> от $60\n"
+        "- Полноценные веб-приложения внутри Telegram.\n"
+        "- <i>Сроки: от 5 до 7 дней</i>\n\n"
         "💡 <i>Все проекты включают чистый код, адаптивность и гарантию работы!</i>"
     )
     
@@ -93,7 +93,7 @@ async def cmd_pricing(message: types.Message):
 # Handle "Хочу сайт" & "Хочу Telegram-бота" (Text or Inline Callback)
 @dp.message(F.text.in_({"🌐 Хочу сайт", "🤖 Хочу Telegram-бота"}))
 async def start_service_wizard(message: types.Message, state: FSMContext):
-    service = "Сайт / Лендинг" if "сайт" in message.text.lower() else "Telegram-бот"
+    service = "Сайт / Лендинг (от $20)" if "сайт" in message.text.lower() else "Telegram-бот (от $15)"
     await state.update_data(selected_service=service)
     await state.set_state(ServiceWizard.task_description)
 
@@ -106,7 +106,7 @@ async def start_service_wizard(message: types.Message, state: FSMContext):
 
 @dp.callback_query(F.data.in_({"wizard_site", "wizard_bot"}))
 async def callback_service_wizard(callback: types.CallbackQuery, state: FSMContext):
-    service = "Сайт / Лендинг" if callback.data == "wizard_site" else "Telegram-бот"
+    service = "Сайт / Лендинг (от $20)" if callback.data == "wizard_site" else "Telegram-бот (от $15)"
     await state.update_data(selected_service=service)
     await state.set_state(ServiceWizard.task_description)
 
@@ -235,7 +235,7 @@ async def main():
     await site.start()
     logger.info(f"HTTP Server listening for Web Leads on port {PORT}")
 
-    print("🚀 Telegram Order Intake Bot started successfully with scenario!")
+    print("🚀 Telegram Order Intake Bot started successfully with new prices!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
