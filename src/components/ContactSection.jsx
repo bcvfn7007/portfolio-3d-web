@@ -11,10 +11,11 @@ export default function ContactSection({ prefilledSummary }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
+  // VERIFIED BOT & USER CHAT ID (NO REDIRECTS, DIRECT SILENT DELIVERY)
   const BOT_TOKEN = '7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ';
-  // Admin Chat ID: Replace with numerical ID from @userinfobot (e.g. 123456789)
-  const ADMIN_CHAT_ID = '';
+  const ADMIN_CHAT_ID = '8726413176';
 
   useEffect(() => {
     if (prefilledSummary) {
@@ -30,52 +31,54 @@ export default function ContactSection({ prefilledSummary }) {
     if (!formData.name || !formData.contact) return;
 
     setIsSubmitting(true);
+    setErrorMsg('');
 
-    // Format pre-filled order text
-    const formattedText = `🚀 *НОВАЯ ЗАЯВКА С САЙТА!*\n\n` +
-      `👤 *Имя:* ${formData.name}\n` +
-      `📞 *Контакт:* ${formData.contact}\n` +
-      `📝 *Проект / Расчёт:* ${formData.message || 'Без комментария'}`;
+    // Format rich HTML Telegram notification for the developer
+    const telegramMessage = `🚀 <b>НОВАЯ ЗАЯВКА С ПОРТФОЛИО-САЙТА!</b>\n\n` +
+      `👤 <b>Имя клиента:</b> ${formData.name}\n` +
+      `📞 <b>Контакт:</b> ${formData.contact}\n` +
+      `📝 <b>Детали проекта / Расчёт:</b>\n${formData.message || 'Без комментария'}`;
 
-    // 1. Direct Telegram link redirect (guaranteed delivery)
-    const encodedText = encodeURIComponent(formattedText);
-    const directTelegramUrl = `https://t.me/o_o_developer?text=${encodedText}`;
+    try {
+      // Send direct background HTTPS request to Telegram Bot API (No page redirects!)
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: ADMIN_CHAT_ID,
+          text: telegramMessage,
+          parse_mode: 'HTML'
+        })
+      });
 
-    // 2. Try sending background bot API request if ADMIN_CHAT_ID is set
-    if (ADMIN_CHAT_ID) {
-      try {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: ADMIN_CHAT_ID,
-            text: formattedText.replace(/\*/g, ''),
-            parse_mode: 'HTML'
-          })
+      const result = await response.json();
+
+      if (result.ok) {
+        // Trigger celebratory confetti animation on site
+        confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#ff2a85', '#9d4edd', '#00f5d4']
         });
-      } catch (err) {
-        console.warn('Bot API notice:', err);
+
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setFormData({ name: '', contact: '', message: '' });
+        }, 7000);
+      } else {
+        console.error('Telegram API error:', result);
+        setErrorMsg('Ошибка отправки. Попробуйте еще раз или напишите напрямую в Telegram.');
       }
+    } catch (err) {
+      console.error('Error sending lead to Telegram:', err);
+      setErrorMsg('Ошибка сети. Попробуйте написать в Telegram напрямую.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Trigger celebratory confetti animation
-    confetti({
-      particleCount: 90,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#ff2a85', '#9d4edd', '#00f5d4']
-    });
-
-    setSubmitted(true);
-    setIsSubmitting(false);
-
-    // Open Telegram with prefilled message in a new tab
-    window.open(directTelegramUrl, '_blank');
-
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', contact: '', message: '' });
-    }, 6000);
   };
 
   const copyUsername = () => {
@@ -100,7 +103,7 @@ export default function ContactSection({ prefilledSummary }) {
             Начнём ваш <span className="gradient-text-pink">проект</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
-            Напишите мне лично в Telegram, запустите авто-бота или оставьте заявку в форме.
+            Заполните форму — заявка мгновенно поступит разработчику в Telegram без каких-либо перенаправлений.
           </p>
         </div>
 
@@ -113,7 +116,7 @@ export default function ContactSection({ prefilledSummary }) {
                 Прямая связь и Заказ
               </h3>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
-                Самый быстрый способ обсудить задачу — написать мне лично или оформить расчет через бота.
+                Самый быстрый способ обсудить задачу — написать мне лично или оформить заказ через форму.
               </p>
 
               <div className="space-y-3 pt-2">
@@ -176,6 +179,26 @@ export default function ContactSection({ prefilledSummary }) {
                   </div>
                   <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
                 </a>
+
+                {/* Kwork Profile Direct Link */}
+                <a
+                  href="https://kwork.ru/user/bcvfn23"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full p-4 rounded-2xl glass-card border-white/10 hover:border-purple-500/40 text-white font-medium text-sm transition-all flex items-center justify-between group cursor-pointer"
+                  data-cursor="KWORK"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
+                      <Briefcase className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs opacity-60 font-mono">Профиль Kwork:</span>
+                      <span className="text-sm font-mono text-slate-200">kwork.ru/user/bcvfn23</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+                </a>
               </div>
             </div>
 
@@ -188,7 +211,7 @@ export default function ContactSection({ prefilledSummary }) {
             </div>
           </div>
 
-          {/* Right Column: Interactive Web Form with 100% Guaranteed Telegram Delivery */}
+          {/* Right Column: Interactive Web Form sending DIRECTLY to Telegram */}
           <div className="lg:col-span-7">
             <div className="glass-card p-8 sm:p-10 border-white/15 relative overflow-hidden">
               {submitted ? (
@@ -197,10 +220,10 @@ export default function ContactSection({ prefilledSummary }) {
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h4 className="text-2xl font-bold font-syne text-white">
-                    Заявка передана в Telegram!
+                    Заявка мгновенно отправлена в Telegram!
                   </h4>
                   <p className="text-slate-300 text-sm max-w-md">
-                    Спасибо! Открылся диалог в Telegram с предзаполненной заявкой. Вы также можете отправить её в один клик.
+                    Спасибо за обращение! Данные переданы разработчику в Telegram. Ответ поступит вам в ближайшие минуты.
                   </p>
                 </div>
               ) : (
@@ -252,13 +275,20 @@ export default function ContactSection({ prefilledSummary }) {
                     </div>
                   </div>
 
+                  {errorMsg && (
+                    <div className="flex items-center gap-2 text-rose-400 text-xs bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{errorMsg}</span>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-base shadow-lg shadow-pink-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50"
                     data-cursor="SEND"
                   >
-                    <span>{isSubmitting ? 'Формирование заявки...' : 'Отправить заявку в Telegram'}</span>
+                    <span>{isSubmitting ? 'Отправка заявки...' : 'Отправить сообщение'}</span>
                     <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </form>
