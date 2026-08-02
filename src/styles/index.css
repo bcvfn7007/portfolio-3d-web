@@ -28,6 +28,14 @@ html, body {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
 }
 
+/* Form Input Typography Rules */
+input, textarea, select {
+  font-family: var(--font-jakarta) !important;
+  text-transform: none !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+}
+
 /* Custom Scrollbar - Sleek Dark Theme */
 ::-webkit-scrollbar {
   width: 8px;

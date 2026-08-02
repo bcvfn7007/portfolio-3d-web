@@ -128,6 +128,9 @@ export const translations = {
       nameLabel: 'Ваше имя *',
       contactLabel: 'Ваш Telegram / Телефон *',
       descLabel: 'Описание проекта или задача',
+      namePlaceholder: 'Введите ваше имя',
+      contactPlaceholder: '@username или +998901234567',
+      descPlaceholder: 'Опишите вашу задачу или пожелания по проекту...',
       btnSend: 'Отправить сообщение',
       submitting: 'Отправка заявки...'
     }
@@ -204,7 +207,7 @@ export const translations = {
         saruno: {
           category: 'Sanoat un ishlab chiqarish',
           badge: 'Zavod va Ulgurji platforma',
-          description: 'SARUNO un zavodi (Zarbdor, Jizzax) uchun yuqori texnologiyali veb-sayt. Ko\'p tilli interfeys (RU/EN/UZ), ishlab chiqarish galereyasi va ulgurji buyurtmalar.',
+          description: 'SARUNO un zavodi (Zarbdor, Jizzax) uchun yuqori texnologiyali veb-sayt. Ko\'p tilli interfeys (RU/EN/UZ), galereya va ulgurji buyurtmalar.',
           stats: { speed: '100/100 Tezlik', ux: 'RU / EN / UZ', security: 'ISO Sertifikatlangan' },
           deliverables: [
             'Zarbdor un zavodi taqdimoti (kunlik quvvati 200 tonna)',
@@ -261,6 +264,9 @@ export const translations = {
       nameLabel: 'Ismingiz *',
       contactLabel: 'Telegram / Telefoningiz *',
       descLabel: 'Loyiha tavsifi yoki vazifa',
+      namePlaceholder: 'Ismingizni kiriting',
+      contactPlaceholder: '@username yoki +998901234567',
+      descPlaceholder: 'Loyihangiz haqida qisqacha ma\'lumot bering...',
       btnSend: 'Xabar yuborish',
       submitting: 'Yuborilmoqda...'
     }
@@ -313,7 +319,7 @@ export const translations = {
         stanford: {
           category: 'Language Online School',
           badge: 'EdTech & Web Platform',
-          description: 'Educational web portal for Stanford Language School featuring student portal, English course enrollment, and interactive placement testing.',
+          description: 'Educational web portal for Stanford Language School featuring student portal, English course enrollment, and placement testing.',
           stats: { speed: '99/100 Lighthouse', ux: 'Responsive UI', security: 'SSL & Auth' },
           deliverables: [
             'Language courses and preparation programs catalog',
@@ -394,6 +400,9 @@ export const translations = {
       nameLabel: 'Your Name *',
       contactLabel: 'Your Telegram / Phone *',
       descLabel: 'Project details or requirements',
+      namePlaceholder: 'Enter your name',
+      contactPlaceholder: '@username or +123456789',
+      descPlaceholder: 'Describe your project or task details...',
       btnSend: 'Send Message',
       submitting: 'Sending inquiry...'
     }

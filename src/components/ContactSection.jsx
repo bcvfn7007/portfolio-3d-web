@@ -82,12 +82,6 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
     }
   };
 
-  const copyUsername = () => {
-    navigator.clipboard.writeText('@o_o_developer');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
-  };
-
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
       <div className="bg-orb bg-orb-1" />
@@ -100,7 +94,7 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
             <MessageSquare className="w-3.5 h-3.5" />
             <span>{t.badge}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-syne text-white">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">
             {t.title1}
             <span className="gradient-text-pink">{t.titleHighlight}</span>
           </h2>
@@ -114,7 +108,7 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
           {/* Left Column: Direct Magnetic Contact Buttons */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="glass-card p-8 space-y-6">
-              <h3 className="text-2xl font-bold font-syne text-white">
+              <h3 className="text-2xl font-bold text-white">
                 {t.directTitle}
               </h3>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
@@ -221,7 +215,7 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
                   <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center animate-bounce">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h4 className="text-2xl font-bold font-syne text-white">
+                  <h4 className="text-2xl font-bold text-white">
                     Заявка успешно отправлена!
                   </h4>
                   <p className="text-slate-300 text-sm max-w-md">
@@ -230,7 +224,7 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <h3 className="text-2xl font-bold font-syne text-white">
+                  <h3 className="text-2xl font-bold text-white">
                     {t.btnSend}
                   </h3>
 
@@ -242,10 +236,11 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
                       <input
                         type="text"
                         required
-                        placeholder="Name"
+                        placeholder={t.namePlaceholder || "Введите ваше имя"}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors"
+                        className="w-full px-4 py-3.5 rounded-xl glass-card bg-black/50 border-white/15 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-pink-500 transition-colors normal-case font-sans tracking-normal"
+                        style={{ textTransform: 'none', fontFamily: 'var(--font-jakarta)' }}
                       />
                     </div>
 
@@ -256,10 +251,11 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
                       <input
                         type="text"
                         required
-                        placeholder="@username / phone"
+                        placeholder={t.contactPlaceholder || "@username / телефон"}
                         value={formData.contact}
                         onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors"
+                        className="w-full px-4 py-3.5 rounded-xl glass-card bg-black/50 border-white/15 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-pink-500 transition-colors normal-case font-sans tracking-normal"
+                        style={{ textTransform: 'none', fontFamily: 'var(--font-jakarta)' }}
                       />
                     </div>
 
@@ -269,10 +265,11 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
                       </label>
                       <textarea
                         rows={4}
-                        placeholder="Project description..."
+                        placeholder={t.descPlaceholder || "Описание проекта..."}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl glass-card bg-black/40 border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-pink-500 transition-colors resize-none"
+                        className="w-full px-4 py-3.5 rounded-xl glass-card bg-black/50 border-white/15 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-pink-500 transition-colors resize-none normal-case font-sans tracking-normal"
+                        style={{ textTransform: 'none', fontFamily: 'var(--font-jakarta)' }}
                       />
                     </div>
                   </div>
