@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
 import PortfolioSection from './components/PortfolioSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import ServicesSection from './components/ServicesSection';
 import ContactSection from './components/ContactSection';
 import ProjectModal from './components/ProjectModal';
@@ -43,7 +44,7 @@ export default function App() {
     gsap.ticker.lagSmoothing(0);
 
     // 2. GSAP Scroll Reveal Animations for sections and cards
-    const revealElements = document.querySelectorAll('#about, #portfolio, #services, #contact');
+    const revealElements = document.querySelectorAll('#about, #portfolio, #testimonials, #services, #contact');
     revealElements.forEach((el) => {
       gsap.fromTo(
         el,
@@ -101,6 +102,9 @@ export default function App() {
 
         {/* Portfolio Section */}
         <PortfolioSection onSelectProject={(proj) => setSelectedProject(proj)} currentLang={currentLang} />
+
+        {/* Testimonials Section */}
+        <TestimonialsSection currentLang={currentLang} />
 
         {/* Services & Bento Grid Section */}
         <ServicesSection onOpenContactWithSummary={handleOpenContactWithSummary} currentLang={currentLang} />

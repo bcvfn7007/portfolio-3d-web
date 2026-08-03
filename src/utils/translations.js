@@ -4,6 +4,7 @@ export const translations = {
       about: 'О себе',
       portfolio: 'Портфолио',
       services: 'Услуги & Прайс',
+      testimonials: 'Отзывы',
       contact: 'Контакты',
       write: 'Написать'
     },
@@ -82,11 +83,40 @@ export const translations = {
         }
       }
     },
+    testimonials: {
+      badge: 'ОТЗЫВЫ И ДОВЕРИЕ',
+      title1: 'Что говорят ',
+      titleHighlight: 'клиенты',
+      sub: 'Обратная связь от реальных заказчиков и руководителей проектов.',
+      items: [
+        {
+          name: 'Дмитрий Ким',
+          role: 'Директор Stanford School',
+          text: 'Сайт нашей языковой школы был сдан ровно за 4 дня. Адаптивность безупречная, студентам удобно записываться прямо со смартфонов. Заявки приходят в Telegram моментально!',
+          project: 'stanfordschool.onrender.com'
+        },
+        {
+          name: 'Фарход Рахимов',
+          role: 'Руководитель проекта Yoshlar Qalqoni',
+          text: 'Сложный интерфейс ИИ-платформы с графиками был сделан на высочайшем уровне. Отдельное спасибо за поддержку узбекского и русского языков и быструю интеграцию.',
+          project: 'yoshlar-yetakchisi.onrender.com'
+        },
+        {
+          name: 'Отабек Муратов',
+          role: 'Управляющий завода SARUNO',
+          text: 'Заказывали презентационный сайт мукомольного завода. Разработчик отлично передал масштаб производства и каталога. Заказы от крупных B2B оптовиков теперь приходят напрямую в бот.',
+          project: 'sarunomiramiller.netlify.app'
+        }
+      ]
+    },
     services: {
       badge: 'УСЛУГИ И СТОИМОСТЬ',
       title1: 'Решения для вашего ',
       titleHighlight: 'бизнеса',
       sub: 'Прозрачное ценообразование, фиксированные сроки и доступные тарифы.',
+      comboTitle: '🔥 Спец-предложение «Сайт + Бот» за $30',
+      comboDesc: 'Закажите разработкy Лендинга ($20) и получите Telegram-бота для приёма заявок всего за $10 вместо $20! Экономия $10.',
+      comboBtn: 'Заказать Комплект $30',
       sitesTitle: 'Сайты и Лендинги',
       sitesDesc: 'Разработка стильных, быстродействующих веб-сайтов под ключ. От лаконичных промо-страниц до бизнес-сайтов с админ-панелью.',
       botsTitle: 'Telegram-боты',
@@ -140,6 +170,7 @@ export const translations = {
       about: 'Haqida',
       portfolio: 'Portfolio',
       services: 'Xizmatlar & Narxlar',
+      testimonials: 'Sharhlar',
       contact: 'Aloqa',
       write: 'Yozish'
     },
@@ -218,11 +249,40 @@ export const translations = {
         }
       }
     },
+    testimonials: {
+      badge: 'SHARHLAR VA ISHONCH',
+      title1: 'Mijozlarimiz nima ',
+      titleHighlight: 'deydi',
+      sub: 'Haqiqiy buyurtmachilar va loyiha rahbarlarining fikrlari.',
+      items: [
+        {
+          name: 'Dmitriy Kim',
+          role: 'Stanford School Direktori',
+          text: 'Til maktabimiz sayti roppa-rosa 4 kunda tayyor bo\'ldi. Moslashuvchanligi a\'lo darajada, talabalarga smartfondan ro\'yxatdan o\'tish juda qulay. Arizalar Telegramga darhol keladi!',
+          project: 'stanfordschool.onrender.com'
+        },
+        {
+          name: 'Farxod Raximov',
+          role: 'Yoshlar Qalqoni Loyiha Rahbari',
+          text: 'AI platformasining grafiklar bilan murakkab interfeysi yuqori saviyada tayyorlandi. O\'zbek va rus tillari qo\'llab-quvvatlanishi va tezkor integratsiya uchun alohida rahmat.',
+          project: 'yoshlar-yetakchisi.onrender.com'
+        },
+        {
+          name: 'Otabek Muratov',
+          role: 'SARUNO Zavodi Boshqaruvchisi',
+          text: 'Un zavodimiz taqdimot saytini buyurtma qildik. Dasturchi ishlab chiqarish miqyosini a\'lo darajada yetkazib berdi. Yirik B2B ulgurji buyurtmalar endi to\'g\'ridan-to\'g\'ri botga kelmoqda.',
+          project: 'sarunomiramiller.netlify.app'
+        }
+      ]
+    },
     services: {
       badge: 'XIZMATLAR VA NARXLAR',
       title1: 'Biznesingiz uchun ',
       titleHighlight: 'yechimlar',
       sub: 'Shaffof narxlar, aniq muddatlar va hamyonbop tariflar.',
+      comboTitle: '🔥 Maxsus «Sayt + Bot» To\'plami $30',
+      comboDesc: 'Lendin sayt buyurtma qiling ($20) va Telegram-botni $20 o\'rniga bor-yo\'g\'i $10 ga oling! Tejamkorlik $10.',
+      comboBtn: '$30 To\'plamni Buyurtma Qilish',
       sitesTitle: 'Saytlar va Lendiglar',
       sitesDesc: 'Tayyor holdagi zamonaviy va tezkor veb-saytlarni ishlab chiqish. Promo-sahifalardan tortib boshqaruv panelli saytlargacha.',
       botsTitle: 'Telegram-botlar',
@@ -276,6 +336,7 @@ export const translations = {
       about: 'About',
       portfolio: 'Portfolio',
       services: 'Services & Pricing',
+      testimonials: 'Testimonials',
       contact: 'Contact',
       write: 'Get in Touch'
     },
@@ -354,11 +415,40 @@ export const translations = {
         }
       }
     },
+    testimonials: {
+      badge: 'REVIEWS & TRUST',
+      title1: 'What clients ',
+      titleHighlight: 'say',
+      sub: 'Feedback from real business founders and project leads.',
+      items: [
+        {
+          name: 'Dmitry Kim',
+          role: 'Director of Stanford School',
+          text: 'Our language school website was delivered in just 4 days. Responsive layout is flawless, students easily enroll right from smartphones. Leads arrive in Telegram instantly!',
+          project: 'stanfordschool.onrender.com'
+        },
+        {
+          name: 'Farkhod Rakhimov',
+          role: 'Project Lead at Yoshlar Qalqoni',
+          text: 'Complex AI platform interface with analytical charts was built to the highest standard. Special thanks for UZ/RU multilingual support and smooth API integration.',
+          project: 'yoshlar-yetakchisi.onrender.com'
+        },
+        {
+          name: 'Otabek Muratov',
+          role: 'Manager at SARUNO Factory',
+          text: 'We commissioned a presentation website for our flour mill factory. The developer perfectly captured our manufacturing scale. B2B wholesale orders now arrive directly in our bot.',
+          project: 'sarunomiramiller.netlify.app'
+        }
+      ]
+    },
     services: {
       badge: 'SERVICES & PRICING',
       title1: 'Solutions for your ',
       titleHighlight: 'business',
       sub: 'Transparent pricing, fixed timelines, and affordable rates.',
+      comboTitle: '🔥 Special Combo Offer: Website + Telegram Bot for $30',
+      comboDesc: 'Order a Landing Page ($20) and get a Telegram lead bot for just $10 instead of $20! Save $10 total.',
+      comboBtn: 'Order $30 Combo Package',
       sitesTitle: 'Websites & Landings',
       sitesDesc: 'Turnkey development of modern, high-speed websites from promo pages to admin CMS platforms.',
       botsTitle: 'Telegram Bots',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, Bot, Zap, Cpu, Check, Calculator, ArrowRight, Sparkles, Clock } from 'lucide-react';
+import { Globe, Bot, Zap, Cpu, Check, Calculator, ArrowRight, Sparkles, Clock, Flame } from 'lucide-react';
 import { translations } from '../utils/translations';
 
 export default function ServicesSection({ onOpenContactWithSummary, currentLang }) {
@@ -68,7 +68,7 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-16">
+        <div className="flex flex-col items-center text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-purple-500/30 text-purple-400 text-xs font-mono tracking-widest uppercase mb-3">
             <Zap className="w-3.5 h-3.5" />
             <span>{t.badge}</span>
@@ -80,6 +80,35 @@ export default function ServicesSection({ onOpenContactWithSummary, currentLang 
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-3 font-light">
             {t.sub}
           </p>
+        </div>
+
+        {/* Promotional Super Combo Deal Banner */}
+        <div className="mb-12 glass-card p-6 sm:p-8 border-pink-500/40 bg-gradient-to-r from-pink-500/15 via-purple-600/15 to-pink-500/10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-pink-500/30 shrink-0">
+              <Flame className="w-7 h-7 text-amber-300 animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs font-mono text-pink-400 uppercase tracking-widest font-bold">
+                PROMO BUNDLE DEAL
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold font-syne text-white">
+                {t.comboTitle}
+              </h3>
+              <p className="text-slate-300 text-xs sm:text-sm max-w-2xl font-light">
+                {t.comboDesc}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => onOpenContactWithSummary('Спец-предложение: Комплект Сайт + Telegram-бот за $30')}
+            className="magnetic-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-pink-600 text-white font-bold text-sm shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+            data-cursor="COMBO"
+          >
+            <span>{t.comboBtn}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Bento Grid Layout */}

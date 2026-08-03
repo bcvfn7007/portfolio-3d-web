@@ -13,7 +13,8 @@ from aiogram.types import (
     InlineKeyboardButton,
     ReplyKeyboardMarkup,
     KeyboardButton,
-    ReplyKeyboardRemove
+    ReplyKeyboardRemove,
+    WebAppInfo
 )
 
 # Load environment variables
@@ -21,6 +22,7 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176").strip()
+WEB_APP_URL = "https://developer-studio.onrender.com/"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,10 +36,11 @@ class ServiceWizard(StatesGroup):
     task_description = State()
     contact_info = State()
 
-# Main Keyboard supporting both Order Intake & Portfolio Showcase
+# Main Keyboard supporting both Order Intake, Portfolio Showcase, & Telegram Mini App (TMA)
 def get_main_menu_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
+            [KeyboardButton(text="📱 Открыть Web App (TMA)", web_app=WebAppInfo(url=WEB_APP_URL))],
             [KeyboardButton(text="🚀 Заказать разработку")],
             [KeyboardButton(text="💼 Мои проекты"), KeyboardButton(text="💰 Узнать цены")],
             [KeyboardButton(text="💬 Прямая связь")]
@@ -75,10 +78,18 @@ async def cmd_start(message: types.Message, state: FSMContext):
         f"👋 <b>Здравствуйте, {message.from_user.first_name}!</b>\n\n"
         "Я официальный бот веб-разработчика <b>Alex (Dev.Studio)</b>.\n\n"
         "Чем я могу помочь?\n"
+        "• 📱 <b>Открыть Web App (TMA)</b> — запустить сайт прямо в Telegram!\n"
         "• 🚀 <b>Заказать разработку</b> — оформить заявку на сайт или бота за 1 минуту\n"
         "• 💼 <b>Мои проекты</b> — посмотреть примеры реальных работающих сайтов\n"
         "• 💰 <b>Узнать цены</b> — ознакомиться с тарифами\n"
         "• 💬 <b>Прямая связь</b> — написать мне напрямую"
+    )
+
+    inline_kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📱 Запустить 3D Портфолио в Telegram", web_app=WebAppInfo(url=WEB_APP_URL))],
+            [InlineKeyboardButton(text="🚀 Заказать разработку", callback_data="wizard_site")]
+        ]
     )
     await message.answer(welcome_text, parse_mode="HTML", reply_markup=get_main_menu_keyboard())
 
@@ -110,6 +121,7 @@ async def cmd_portfolio(message: types.Message):
     )
     inline_kb = InlineKeyboardMarkup(
         inline_keyboard=[
+            [InlineKeyboardButton(text="📱 Открыть Web App портфолио", web_app=WebAppInfo(url=WEB_APP_URL))],
             [InlineKeyboardButton(text="🚀 Заказать подобный проект", callback_data="wizard_site")]
         ]
     )
@@ -137,6 +149,7 @@ async def cmd_direct_contact(message: types.Message):
 async def cmd_pricing(message: types.Message):
     pricing_text = (
         "💰 <b>Прайс-лист на разработку:</b>\n\n"
+        "🔥 <b>Спец-предложение «Сайт + Бот»:</b> $30 (экономия $10!)\n\n"
         "🌐 <b>Сайты и Лендинги:</b> от $20\n"
         "- Эконом ($20-25), Стандарт ($35-40), Бизнес ($60-70).\n"
         "- <i>Сроки: от 3 до 5 дней</i>\n\n"
@@ -287,10 +300,8 @@ async def main():
     logger.info("Starting Telegram Bot with Aiogram Long Polling & Render Health Check Listener...")
     bot = Bot(token=BOT_TOKEN)
     
-    # Delete webhook to ensure fresh long polling
     await bot.delete_webhook(drop_pending_updates=True)
 
-    # Bind dummy lightweight aiohttp server to satisfy Render Web Service Port Scanner
     app = web.Application()
     app.router.add_get('/', handle_health_check)
     app.router.add_get('/health', handle_health_check)
@@ -302,7 +313,7 @@ async def main():
     await site.start()
     logger.info(f"Render Port Listener successfully bound on port {port}")
 
-    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live 24/7 on Render!")
+    logger.info("🚀 Telegram Order Intake & Portfolio Bot (TMA Enabled) is live 24/7!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

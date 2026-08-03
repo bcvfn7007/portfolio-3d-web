@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Globe } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { translations } from '../utils/translations';
 
 export default function Navbar({ onOpenContact, currentLang, onChangeLang }) {
@@ -70,6 +70,13 @@ export default function Navbar({ onOpenContact, currentLang, onChangeLang }) {
             data-cursor="GO"
           >
             {t.portfolio}
+          </button>
+          <button
+            onClick={() => scrollToSection('testimonials')}
+            className="text-sm font-medium text-slate-300 hover:text-pink-400 transition-colors"
+            data-cursor="GO"
+          >
+            {t.testimonials || 'Отзывы'}
           </button>
           <button
             onClick={() => scrollToSection('services')}
