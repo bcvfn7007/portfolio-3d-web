@@ -2,10 +2,9 @@ import os
 import asyncio
 import logging
 from dotenv import load_dotenv
-from aiohttp import web
 
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (
@@ -19,11 +18,13 @@ from aiogram.types import (
 # Load environment variables
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ")
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176")
-PORT = int(os.getenv("PORT", 8080))
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ").strip()
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176").strip()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # FSM States for Interactive Dialog Wizard
@@ -263,47 +264,28 @@ async def process_contact_info(message: types.Message, state: FSMContext, bot: B
         except Exception as e:
             logger.error(f"Failed to send admin lead notification: {e}")
 
-# HTTP Webhook API for Website Leads
-async def handle_web_lead(request):
-    try:
-        data = await request.json()
-        name = data.get("name", "Аноним")
-        contact = data.get("contact", "Не указан")
-        message = data.get("message", "")
-
-        bot = request.app['bot']
-        if ADMIN_CHAT_ID:
-            admin_card = (
-                "🌐 <b>НОВАЯ ЗАЯВКА С ПОРТФОЛИО-САЙТА!</b>\n\n"
-                f"👤 <b>Имя клиента:</b> {name}\n"
-                f"📞 <b>Контакт:</b> {contact}\n"
-                f"📝 <b>Детали проекта / Расчёт:</b>\n{message}\n"
-            )
-            await bot.send_message(chat_id=ADMIN_CHAT_ID, text=admin_card, parse_mode="HTML")
-            return web.json_response({"status": "success"})
-        return web.json_response({"status": "error", "reason": "No ADMIN_CHAT_ID"}, status=400)
-    except Exception as e:
-        logger.error(f"Web lead error: {e}")
-        return web.json_response({"status": "error", "message": str(e)}, status=500)
+# Catch-all handler for unhandled messages
+@dp.message()
+async def fallback_handler(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        await message.answer(
+            "Воспользуйтесь кнопками меню ниже для заказа или просмотра проектов 👇",
+            reply_markup=get_main_menu_keyboard()
+        )
 
 async def main():
     if not BOT_TOKEN:
-        print("⚠️ ERROR: BOT_TOKEN is missing!")
+        logger.error("⚠️ BOT_TOKEN is missing!")
         return
 
+    logger.info("Starting Telegram Bot with Aiogram Long Polling...")
     bot = Bot(token=BOT_TOKEN)
     
-    app = web.Application()
-    app['bot'] = bot
-    app.router.add_post('/api/order', handle_web_lead)
-
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', PORT)
-    await site.start()
-    logger.info(f"HTTP Server listening for Web Leads on port {PORT}")
-
-    print("🚀 Telegram Dual-Purpose Bot started successfully!")
+    # Delete webhook to prevent conflicts with long polling
+    await bot.delete_webhook(drop_pending_updates=True)
+    
+    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live and listening!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
