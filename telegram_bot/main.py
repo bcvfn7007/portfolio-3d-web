@@ -302,7 +302,7 @@ async def main():
     await site.start()
     logger.info(f"Render Port Listener successfully bound on port {port}")
 
-    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live 24/7!")
+    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live 24/7 on Render!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
