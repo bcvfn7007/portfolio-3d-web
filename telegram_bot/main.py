@@ -2,6 +2,7 @@ import os
 import asyncio
 import logging
 from dotenv import load_dotenv
+from aiohttp import web
 
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
@@ -274,18 +275,34 @@ async def fallback_handler(message: types.Message, state: FSMContext):
             reply_markup=get_main_menu_keyboard()
         )
 
+# Render Health Check Route Handler
+async def handle_health_check(request):
+    return web.Response(text="Render Health Check OK - Telegram Bot 24/7 Active!", status=200)
+
 async def main():
     if not BOT_TOKEN:
         logger.error("⚠️ BOT_TOKEN is missing!")
         return
 
-    logger.info("Starting Telegram Bot with Aiogram Long Polling...")
+    logger.info("Starting Telegram Bot with Aiogram Long Polling & Render Health Check Listener...")
     bot = Bot(token=BOT_TOKEN)
     
-    # Delete webhook to prevent conflicts with long polling
+    # Delete webhook to ensure fresh long polling
     await bot.delete_webhook(drop_pending_updates=True)
-    
-    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live and listening!")
+
+    # Bind dummy lightweight aiohttp server to satisfy Render Web Service Port Scanner
+    app = web.Application()
+    app.router.add_get('/', handle_health_check)
+    app.router.add_get('/health', handle_health_check)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.getenv("PORT", 8080))
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+    logger.info(f"Render Port Listener successfully bound on port {port}")
+
+    logger.info("🚀 Telegram Order Intake & Portfolio Bot is live 24/7!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
