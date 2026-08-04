@@ -4,6 +4,7 @@ import asyncio
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
+import aiohttp
 from aiohttp import web
 
 from aiogram import Bot, Dispatcher, F, types
@@ -25,6 +26,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176").strip()
 WEB_APP_URL = "https://developer-studio.onrender.com/"
+RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://portfolio-3d-web.onrender.com/health").strip()
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "leads.db")
 
@@ -182,7 +184,6 @@ dp = Dispatcher()
 
 # --- Admin Panel Handlers ---
 
-# Security check middleware for admin commands
 def is_admin(user_id: int) -> bool:
     return str(user_id) == str(ADMIN_CHAT_ID)
 
@@ -301,7 +302,7 @@ async def admin_process_broadcast(message: types.Message, state: FSMContext, bot
                 message_id=message.message_id
             )
             success_count += 1
-            await asyncio.sleep(0.05) # Rate limit protection
+            await asyncio.sleep(0.05)
         except Exception as e:
             fail_count += 1
             logger.warning(f"Broadcast failed for user {u_id}: {e}")
@@ -320,7 +321,6 @@ async def admin_exit(message: types.Message, state: FSMContext):
 
 # --- Client Facing Bot Handlers ---
 
-# /start command handler
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message, state: FSMContext):
     await state.clear()
@@ -339,7 +339,6 @@ async def cmd_start(message: types.Message, state: FSMContext):
     )
     await message.answer(welcome_text, parse_mode="HTML", reply_markup=get_main_menu_keyboard())
 
-# "🚀 Заказать разработку" button handler
 @dp.message(F.text == "🚀 Заказать разработку")
 async def cmd_order_start(message: types.Message, state: FSMContext):
     await state.clear()
@@ -352,7 +351,6 @@ async def cmd_order_start(message: types.Message, state: FSMContext):
     )
     await message.answer(text, parse_mode="HTML", reply_markup=get_service_choice_keyboard())
 
-# "💼 Мои проекты" button handler
 @dp.message(F.text == "💼 Мои проекты")
 async def cmd_portfolio(message: types.Message):
     user = message.from_user
@@ -379,7 +377,6 @@ async def cmd_portfolio(message: types.Message):
     )
     await message.answer(text, parse_mode="HTML", reply_markup=inline_kb)
 
-# "💬 Прямая связь" button handler
 @dp.message(F.text == "💬 Прямая связь")
 async def cmd_direct_contact(message: types.Message):
     user = message.from_user
@@ -399,7 +396,6 @@ async def cmd_direct_contact(message: types.Message):
     )
     await message.answer(text, parse_mode="HTML", reply_markup=inline_kb)
 
-# "💰 Узнать цены" button handler
 @dp.message(F.text == "💰 Узнать цены")
 async def cmd_pricing(message: types.Message):
     user = message.from_user
@@ -428,7 +424,6 @@ async def cmd_pricing(message: types.Message):
     )
     await message.answer(pricing_text, parse_mode="HTML", reply_markup=inline_kb)
 
-# Handle Service Wizard Choices
 @dp.message(F.text.in_({"🌐 Хочу сайт", "🤖 Хочу Telegram-бота", "📱 Telegram Mini App (TMA)"}))
 async def start_service_wizard(message: types.Message, state: FSMContext):
     service = message.text
@@ -455,13 +450,11 @@ async def callback_service_wizard(callback: types.CallbackQuery, state: FSMConte
     )
     await callback.answer()
 
-# Cancel handler
 @dp.message(F.text == "❌ Отмена")
 async def cancel_wizard(message: types.Message, state: FSMContext):
     await state.clear()
     await message.answer("Действие отменено.", reply_markup=get_main_menu_keyboard())
 
-# Step 1: Collect Task Description
 @dp.message(ServiceWizard.task_description)
 async def process_task_description(message: types.Message, state: FSMContext):
     if message.text == "❌ Отмена":
@@ -479,7 +472,6 @@ async def process_task_description(message: types.Message, state: FSMContext):
         reply_markup=get_contact_keyboard()
     )
 
-# Step 2: Collect Contact & Send Lead
 @dp.message(ServiceWizard.contact_info)
 async def process_contact_info(message: types.Message, state: FSMContext, bot: Bot):
     if message.text == "❌ Отмена":
@@ -501,7 +493,6 @@ async def process_contact_info(message: types.Message, state: FSMContext, bot: B
 
     user_username = f"@{user.username}" if user.username else f"ID: {user.id}"
 
-    # Save Lead to SQLite Database
     save_lead(client_name, contact_text, service, task_desc, "bot")
 
     await state.clear()
@@ -539,7 +530,6 @@ async def process_contact_info(message: types.Message, state: FSMContext, bot: B
         except Exception as e:
             logger.error(f"Failed to send admin lead notification: {e}")
 
-# Catch-all handler for unhandled messages
 @dp.message()
 async def fallback_handler(message: types.Message, state: FSMContext):
     user = message.from_user
@@ -554,17 +544,32 @@ async def fallback_handler(message: types.Message, state: FSMContext):
 
 # Render Health Check Route Handler
 async def handle_health_check(request):
-    return web.Response(text="Render Health Check OK - Telegram Bot & Admin Panel 24/7 Active!", status=200)
+    return web.Response(text="Render Health Check OK - Telegram Bot 24/7 Active!", status=200)
+
+# 24/7 Self-Ping Keep-Alive Task (Prevents Render Free Inactivity Sleep)
+async def self_ping_loop():
+    await asyncio.sleep(15) # Initial boot delay
+    logger.info(f"Starting 24/7 Self-Ping Keep-Alive Task for: {RENDER_EXTERNAL_URL}")
+    
+    async with aiohttp.ClientSession() as session:
+        while True:
+            try:
+                async with session.get(RENDER_EXTERNAL_URL, timeout=10) as resp:
+                    logger.info(f"Self-ping keep-alive success! Status code: {resp.status}")
+            except Exception as e:
+                logger.warning(f"Self-ping keep-alive ping error: {e}")
+            
+            # Ping every 4 minutes (240s) so Render's 15-minute inactivity timer NEVER triggers
+            await asyncio.sleep(240)
 
 async def main():
     if not BOT_TOKEN:
         logger.error("⚠️ BOT_TOKEN is missing!")
         return
 
-    # Initialize SQLite Database
     init_db()
 
-    logger.info("Starting Telegram Bot with Aiogram Long Polling & Admin Panel...")
+    logger.info("Starting Telegram Bot with Aiogram Long Polling & Render Health Check Listener...")
     bot = Bot(token=BOT_TOKEN)
     
     await bot.delete_webhook(drop_pending_updates=True)
@@ -579,6 +584,9 @@ async def main():
     site = web.TCPSite(runner, '0.0.0.0', port)
     await site.start()
     logger.info(f"Render Port Listener successfully bound on port {port}")
+
+    # Launch background 24/7 self-ping loop task
+    asyncio.create_task(self_ping_loop())
 
     logger.info("🚀 Telegram Order Intake, Portfolio & Admin Panel Bot is live 24/7!")
     await dp.start_polling(bot)
