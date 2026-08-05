@@ -1,4 +1,5 @@
 import os
+import re
 import sqlite3
 import asyncio
 import logging
@@ -147,6 +148,27 @@ def get_all_user_ids():
     user_ids = [row[0] for row in cursor.fetchall()]
     conn.close()
     return user_ids
+
+# Clean channel username helper
+def clean_channel_input(raw: str) -> str:
+    s = raw.strip()
+    # If full URL like https://t.me/dev_0_studio or t.me/dev_0_studio
+    if "t.me/" in s:
+        s = s.split("t.me/")[-1].strip("/")
+    # Remove leading @
+    s = s.lstrip("@")
+    if not s.startswith("-100"):
+        return f"@{s}"
+    return s
+
+# Validate contact number or username
+def is_valid_contact(contact_str: str) -> bool:
+    clean = contact_str.strip().replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
+    if clean.startswith("@") and len(clean) >= 5:
+        return True
+    # Digits count check (7 to 15 digits)
+    digits = re.sub(r"[^\d]", "", clean)
+    return len(digits) >= 7 and len(digits) <= 15
 
 # --- FSM States ---
 class ServiceWizard(StatesGroup):
@@ -298,8 +320,8 @@ async def admin_channel_settings(message: types.Message, state: FSMContext):
     await message.answer(
         "⚙️ <b>НАСТРОЙКА КАНАЛА ДЛЯ ПУБЛИКАЦИИ:</b>\n\n"
         f"Текущий канал: <code>{current_chan}</code>\n\n"
-        "Отправьте имя вашего канала с символом @ (например: <code>@my_dev_channel</code> или ссылку/ID):\n"
-        "<i>Не забудьте добавить этого бота в администраторы канала!</i>",
+        "Отправьте юзернейм или ссылку на канал (например: <code>@dev_0_studio</code> или <code>https://t.me/dev_0_studio</code>):\n"
+        "<i>Убедитесь, что бот добавлен в Администраторы канала!</i>",
         parse_mode="HTML",
         reply_markup=cancel_kb
     )
@@ -314,16 +336,13 @@ async def process_set_channel_username(message: types.Message, state: FSMContext
         await message.answer("Настройка канала отменена.", reply_markup=get_admin_keyboard())
         return
 
-    channel_input = message.text.strip()
-    if not channel_input.startswith("@") and not channel_input.startswith("-100"):
-        channel_input = f"@{channel_input}"
-
-    set_setting("channel_username", channel_input)
+    cleaned_channel = clean_channel_input(message.text)
+    set_setting("channel_username", cleaned_channel)
     await state.clear()
     
     await message.answer(
-        f"✅ Канал успешно привязан: <code>{channel_input}</code>\n\n"
-        "Убедитесь, что бот назначен **Администратором** канала с правом публикации сообщений!",
+        f"✅ Канал успешно привязан: <code>{cleaned_channel}</code>\n\n"
+        "Убедитесь, что бот назначен **Администратором** канала с правом публикации!",
         parse_mode="HTML",
         reply_markup=get_admin_keyboard()
     )
@@ -339,7 +358,7 @@ async def admin_start_channel_post(message: types.Message, state: FSMContext):
         cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ Отмена")]], resize_keyboard=True)
         await message.answer(
             "⚠️ <b>Канал ещё не привязан!</b>\n\n"
-            "Пожалуйста, отправьте имя вашего канала с @ (например: <code>@dev_studio_uz</code>):",
+            "Пожалуйста, отправьте ссылку или юзернейм вашего канала (например: <code>@dev_0_studio</code>):",
             parse_mode="HTML",
             reply_markup=cancel_kb
         )
@@ -374,7 +393,6 @@ async def process_channel_post_draft(message: types.Message, state: FSMContext, 
 
     await message.answer("⏳ <b>Предпросмотр поста с кнопками:</b>", parse_mode="HTML", reply_markup=get_admin_keyboard())
 
-    # Send preview message to admin with target inline keyboard
     try:
         if message.photo:
             photo_file_id = message.photo[-1].file_id
@@ -422,7 +440,6 @@ async def callback_publish_channel_post(callback: types.CallbackQuery, bot: Bot)
     preview_msg_id = int(callback.data.split("_")[2])
 
     try:
-        # Publish directly to channel with inline buttons
         await bot.copy_message(
             chat_id=target_chan,
             from_chat_id=callback.message.chat.id,
@@ -683,18 +700,26 @@ async def process_contact_info(message: types.Message, state: FSMContext, bot: B
         await message.answer("Отменено.", reply_markup=get_main_menu_keyboard())
         return
 
+    user = message.from_user
+
+    if message.contact:
+        contact_text = f"📱 {message.contact.phone_number}"
+    else:
+        contact_text = message.text.strip()
+        if not is_valid_contact(contact_text):
+            await message.answer(
+                "⚠️ <b>Пожалуйста, введите корректный номер телефона</b> (напр. <code>+998901234567</code>) или ваш Telegram <code>@username</code>:\n"
+                "или нажмите кнопку <b>«📱 Поделиться контактом»</b> ниже 👇",
+                parse_mode="HTML",
+                reply_markup=get_contact_keyboard()
+            )
+            return
+
     data = await state.get_data()
     service = data.get("selected_service", "Разработка")
     task_desc = data.get("task_description", "Не указано")
 
-    user = message.from_user
     client_name = user.full_name or user.first_name or "Клиент"
-    
-    if message.contact:
-        contact_text = f"📱 {message.contact.phone_number}"
-    else:
-        contact_text = message.text
-
     user_username = f"@{user.username}" if user.username else f"ID: {user.id}"
 
     save_lead(client_name, contact_text, service, task_desc, "bot")
