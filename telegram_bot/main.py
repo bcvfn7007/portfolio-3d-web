@@ -190,7 +190,6 @@ async def ask_gemini_ai(user_message: str, user_name: str) -> str:
     api_key = get_setting("gemini_api_key", GEMINI_API_KEY)
     
     if not api_key:
-        # Intelligent fallback consultation if API key not set yet
         return (
             f"👋 Здравствуйте, {user_name}!\n\n"
             "Я ИИ-консультант студии **Dev.Studio**. Разрабатываем современные сайты от **$20** и Telegram-ботов от **$15** (готовность от 3 дней).\n\n"
@@ -315,10 +314,11 @@ async def cmd_admin(message: types.Message, state: FSMContext):
 
     await state.clear()
     target_chan = get_setting("channel_username", "Не привязан")
+    has_key = bool(get_setting("gemini_api_key", GEMINI_API_KEY))
     await message.answer(
         "⚙️ <b>Панель администратора Dev.Studio</b>\n\n"
         f"📢 <b>Привязанный канал:</b> <code>{target_chan}</code>\n"
-        f"🤖 <b>Gemini AI API Key:</b> {'Установлен ✅' if get_setting('gemini_api_key', GEMINI_API_KEY) else 'Не задан ⚠️'}\n\n"
+        f"🤖 <b>Gemini AI API Key:</b> {'Установлен ✅' if has_key else 'Не задан ⚠️'}\n\n"
         "Выберите действие на клавиатуре ниже:",
         parse_mode="HTML",
         reply_markup=get_admin_keyboard()
@@ -345,7 +345,7 @@ async def admin_set_gemini_key(message: types.Message, state: FSMContext):
     cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ Отмена")]], resize_keyboard=True)
     await message.answer(
         "🔑 <b>НАСТРОЙКА GOOGLE GEMINI API KEY:</b>\n\n"
-        "Отправьте ваш бесплатный API Ключ от Google Gemini (получить бесплатно на <code>aistudio.google.com</code>):",
+        "Отправьте ваш API Ключ от Google Gemini:",
         parse_mode="HTML",
         reply_markup=cancel_kb
     )
@@ -877,7 +877,6 @@ async def fallback_gemini_ai_handler(message: types.Message, state: FSMContext):
     if current_state is not None:
         return
 
-    # Check if AI Assistant is enabled in settings
     if get_setting("ai_enabled", "true") == "true":
         await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
         client_name = user.first_name or user.full_name or "Клиент"
