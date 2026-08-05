@@ -63,10 +63,33 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    # Table for bot settings (e.g. channel ID / username)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    """)
     
     conn.commit()
     conn.close()
     logger.info("SQLite database initialized successfully.")
+
+def set_setting(key: str, value: str):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
+    conn.commit()
+    conn.close()
+
+def get_setting(key: str, default: str = "") -> str:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT value FROM settings WHERE key = ?", (key,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else default
 
 def register_user(user_id: int, username: str, full_name: str):
     conn = sqlite3.connect(DB_PATH)
@@ -133,6 +156,8 @@ class ServiceWizard(StatesGroup):
 
 class AdminStates(StatesGroup):
     waiting_broadcast_message = State()
+    waiting_channel_post = State()
+    waiting_channel_username = State()
 
 # Developer Availability Status State
 dev_status = {"available": True}
@@ -154,10 +179,22 @@ def get_admin_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📊 Статистика"), KeyboardButton(text="📋 Последние заявки")],
-            [KeyboardButton(text="📢 Массовая рассылка")],
-            [KeyboardButton(text=status_text), KeyboardButton(text="🚪 Выйти из админки")]
+            [KeyboardButton(text="📝 Пост в Канал"), KeyboardButton(text="📢 Массовая рассылка")],
+            [KeyboardButton(text=status_text), KeyboardButton(text="⚙️ Настройки Канала")],
+            [KeyboardButton(text="🚪 Выйти из админки")]
         ],
         resize_keyboard=True
+    )
+
+def get_channel_post_inline_keyboard():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📱 3D Портфолио (TMA)", web_app=WebAppInfo(url=WEB_APP_URL))],
+            [
+                InlineKeyboardButton(text="🚀 Заказать разработку ↗️", url="https://t.me/zakaz_priyom_bot?start=channel"),
+                InlineKeyboardButton(text="💬 Написать разработчику ↗️", url="https://t.me/o_o_developer")
+            ]
+        ]
     )
 
 def get_service_choice_keyboard():
@@ -194,8 +231,10 @@ async def cmd_admin(message: types.Message, state: FSMContext):
         return
 
     await state.clear()
+    target_chan = get_setting("channel_username", "Не привязан")
     await message.answer(
         "⚙️ <b>Панель администратора Dev.Studio</b>\n\n"
+        f"📢 <b>Текущий канал:</b> <code>{target_chan}</code>\n\n"
         "Выберите действие на клавиатуре ниже:",
         parse_mode="HTML",
         reply_markup=get_admin_keyboard()
@@ -208,13 +247,15 @@ async def admin_stats(message: types.Message):
 
     total_leads, site_leads, bot_leads, total_users = get_stats()
     status_str = "🟢 Открыт к заказам 24/7" if dev_status["available"] else "🔴 Занят на проекте"
+    target_chan = get_setting("channel_username", "Не привязан")
 
     stats_text = (
         "📊 <b>СТАТИСТИКА БОТА И ЗАЯВОК:</b>\n\n"
         f"🎯 <b>Всего заявок:</b> {total_leads}\n"
         f"🌐 <b>Заявок с сайта:</b> {site_leads}\n"
         f"🤖 <b>Заявок из Telegram-бота:</b> {bot_leads}\n"
-        f"👥 <b>Всего зарегистрировано пользователей:</b> {total_users}\n"
+        f"👥 <b>Всего пользователей в базе:</b> {total_users}\n"
+        f"📢 <b>Привязанный канал:</b> <code>{target_chan}</code>\n"
         f"⚡ <b>Текущий статус разработчика:</b> {status_str}"
     )
     await message.answer(stats_text, parse_mode="HTML", reply_markup=get_admin_keyboard())
@@ -240,6 +281,169 @@ async def admin_recent_leads(message: types.Message):
         )
 
     await message.answer(text, parse_mode="HTML", reply_markup=get_admin_keyboard())
+
+@dp.message(F.text == "⚙️ Настройки Канала")
+async def admin_channel_settings(message: types.Message, state: FSMContext):
+    if not is_admin(message.from_user.id):
+        return
+
+    await state.set_state(AdminStates.waiting_channel_username)
+    current_chan = get_setting("channel_username", "Не привязан")
+    
+    cancel_kb = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="❌ Отмена")]],
+        resize_keyboard=True
+    )
+
+    await message.answer(
+        "⚙️ <b>НАСТРОЙКА КАНАЛА ДЛЯ ПУБЛИКАЦИИ:</b>\n\n"
+        f"Текущий канал: <code>{current_chan}</code>\n\n"
+        "Отправьте имя вашего канала с символом @ (например: <code>@my_dev_channel</code> или ссылку/ID):\n"
+        "<i>Не забудьте добавить этого бота в администраторы канала!</i>",
+        parse_mode="HTML",
+        reply_markup=cancel_kb
+    )
+
+@dp.message(AdminStates.waiting_channel_username)
+async def process_set_channel_username(message: types.Message, state: FSMContext):
+    if not is_admin(message.from_user.id):
+        return
+
+    if message.text == "❌ Отмена":
+        await state.clear()
+        await message.answer("Настройка канала отменена.", reply_markup=get_admin_keyboard())
+        return
+
+    channel_input = message.text.strip()
+    if not channel_input.startswith("@") and not channel_input.startswith("-100"):
+        channel_input = f"@{channel_input}"
+
+    set_setting("channel_username", channel_input)
+    await state.clear()
+    
+    await message.answer(
+        f"✅ Канал успешно привязан: <code>{channel_input}</code>\n\n"
+        "Убедитесь, что бот назначен **Администратором** канала с правом публикации сообщений!",
+        parse_mode="HTML",
+        reply_markup=get_admin_keyboard()
+    )
+
+@dp.message(F.text == "📝 Пост в Канал")
+async def admin_start_channel_post(message: types.Message, state: FSMContext):
+    if not is_admin(message.from_user.id):
+        return
+
+    target_chan = get_setting("channel_username", "")
+    if not target_chan:
+        await state.set_state(AdminStates.waiting_channel_username)
+        cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ Отмена")]], resize_keyboard=True)
+        await message.answer(
+            "⚠️ <b>Канал ещё не привязан!</b>\n\n"
+            "Пожалуйста, отправьте имя вашего канала с @ (например: <code>@dev_studio_uz</code>):",
+            parse_mode="HTML",
+            reply_markup=cancel_kb
+        )
+        return
+
+    await state.set_state(AdminStates.waiting_channel_post)
+    cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ Отмена")]], resize_keyboard=True)
+    
+    await message.answer(
+        f"📝 <b>СОЗДАНИЕ ПОСТА ДЛЯ КАНАЛА ({target_chan}):</b>\n\n"
+        "Отправьте текст или картинку с описанием поста.\n"
+        "Бот автоматически прикрепит к посту кнопки:\n"
+        "• 📱 <b>3D Портфолио (TMA)</b>\n"
+        "• 🚀 <b>Заказать разработку ↗️</b>\n"
+        "• 💬 <b>Написать разработчику ↗️</b>",
+        parse_mode="HTML",
+        reply_markup=cancel_kb
+    )
+
+@dp.message(AdminStates.waiting_channel_post)
+async def process_channel_post_draft(message: types.Message, state: FSMContext, bot: Bot):
+    if not is_admin(message.from_user.id):
+        return
+
+    if message.text == "❌ Отмена":
+        await state.clear()
+        await message.answer("Отменено.", reply_markup=get_admin_keyboard())
+        return
+
+    target_chan = get_setting("channel_username", "")
+    await state.clear()
+
+    await message.answer("⏳ <b>Предпросмотр поста с кнопками:</b>", parse_mode="HTML", reply_markup=get_admin_keyboard())
+
+    # Send preview message to admin with target inline keyboard
+    try:
+        if message.photo:
+            photo_file_id = message.photo[-1].file_id
+            caption_text = message.caption or ""
+            preview_msg = await bot.send_photo(
+                chat_id=message.chat.id,
+                photo=photo_file_id,
+                caption=caption_text,
+                reply_markup=get_channel_post_inline_keyboard()
+            )
+        else:
+            preview_msg = await bot.send_message(
+                chat_id=message.chat.id,
+                text=message.text,
+                reply_markup=get_channel_post_inline_keyboard()
+            )
+
+        confirm_inline_kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="✅ Опубликовать в Канал", callback_data=f"publish_post_{preview_msg.message_id}")],
+                [InlineKeyboardButton(text="❌ Отменить", callback_data="cancel_post")]
+            ]
+        )
+
+        await message.answer(
+            f"👆 Выше показан предпросмотр.\nОпубликовать в канал <code>{target_chan}</code>?",
+            parse_mode="HTML",
+            reply_markup=confirm_inline_kb
+        )
+    except Exception as e:
+        logger.error(f"Failed to generate channel post preview: {e}")
+        await message.answer(f"❌ Ошибка генерации поста: {e}", reply_markup=get_admin_keyboard())
+
+@dp.callback_query(F.data.startswith("publish_post_"))
+async def callback_publish_channel_post(callback: types.CallbackQuery, bot: Bot):
+    if not is_admin(callback.from_user.id):
+        await callback.answer("⚠️ Отказано в доступе.", show_alert=True)
+        return
+
+    target_chan = get_setting("channel_username", "")
+    if not target_chan:
+        await callback.answer("⚠️ Канал не привязан! Перейдите в Настройки Канала.", show_alert=True)
+        return
+
+    preview_msg_id = int(callback.data.split("_")[2])
+
+    try:
+        # Publish directly to channel with inline buttons
+        await bot.copy_message(
+            chat_id=target_chan,
+            from_chat_id=callback.message.chat.id,
+            message_id=preview_msg_id,
+            reply_markup=get_channel_post_inline_keyboard()
+        )
+        await callback.message.edit_text(f"🎉 <b>ПОСТ УСПЕШНО ОПУБЛИКОВАН В КАНАЛ {target_chan}!</b>", parse_mode="HTML")
+        await callback.answer("Опубликовано!")
+    except Exception as e:
+        logger.error(f"Failed to publish post to channel {target_chan}: {e}")
+        await callback.message.edit_text(
+            f"❌ <b>Ошибка публикации в {target_chan}:</b>\n<code>{e}</code>\n\n"
+            "Убедитесь, что бот добавлен в Администраторы канала с правом публикации!",
+            parse_mode="HTML"
+        )
+        await callback.answer("Ошибка публикации!", show_alert=True)
+
+@dp.callback_query(F.data == "cancel_post")
+async def callback_cancel_channel_post(callback: types.CallbackQuery):
+    await callback.message.edit_text("Публикация поста отменена.")
+    await callback.answer()
 
 @dp.message(F.text.startswith("🟢 Статус:") | F.text.startswith("🔴 Статус:"))
 async def admin_toggle_status(message: types.Message):
@@ -544,11 +748,11 @@ async def fallback_handler(message: types.Message, state: FSMContext):
 
 # Render Health Check Route Handler
 async def handle_health_check(request):
-    return web.Response(text="Render Health Check OK - Telegram Bot 24/7 Active!", status=200)
+    return web.Response(text="Render Health Check OK - Telegram Bot & Channel Poster 24/7 Active!", status=200)
 
 # 24/7 Self-Ping Keep-Alive Task (Prevents Render Free Inactivity Sleep)
 async def self_ping_loop():
-    await asyncio.sleep(15) # Initial boot delay
+    await asyncio.sleep(15)
     logger.info(f"Starting 24/7 Self-Ping Keep-Alive Task for: {RENDER_EXTERNAL_URL}")
     
     async with aiohttp.ClientSession() as session:
@@ -559,7 +763,6 @@ async def self_ping_loop():
             except Exception as e:
                 logger.warning(f"Self-ping keep-alive ping error: {e}")
             
-            # Ping every 4 minutes (240s) so Render's 15-minute inactivity timer NEVER triggers
             await asyncio.sleep(240)
 
 async def main():
@@ -569,7 +772,7 @@ async def main():
 
     init_db()
 
-    logger.info("Starting Telegram Bot with Aiogram Long Polling & Render Health Check Listener...")
+    logger.info("Starting Telegram Bot with Aiogram Long Polling & Channel Poster...")
     bot = Bot(token=BOT_TOKEN)
     
     await bot.delete_webhook(drop_pending_updates=True)
@@ -585,10 +788,9 @@ async def main():
     await site.start()
     logger.info(f"Render Port Listener successfully bound on port {port}")
 
-    # Launch background 24/7 self-ping loop task
     asyncio.create_task(self_ping_loop())
 
-    logger.info("🚀 Telegram Order Intake, Portfolio & Admin Panel Bot is live 24/7!")
+    logger.info("🚀 Telegram Order Intake, Portfolio, Admin Panel & Channel Poster Bot is live 24/7!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
