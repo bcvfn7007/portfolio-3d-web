@@ -10,7 +10,10 @@ import AboutSection from './components/AboutSection';
 import PortfolioSection from './components/PortfolioSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import ServicesSection from './components/ServicesSection';
+import FaqSection from './components/FaqSection';
 import ContactSection from './components/ContactSection';
+import FloatingChatWidget from './components/FloatingChatWidget';
+import LiveLeadsTicker from './components/LiveLeadsTicker';
 import ProjectModal from './components/ProjectModal';
 import Footer from './components/Footer';
 
@@ -22,7 +25,6 @@ export default function App() {
   const [currentLang, setCurrentLang] = useState('RU');
 
   useEffect(() => {
-    // 1. Initialize Lenis Smooth Scroll Engine
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -36,15 +38,13 @@ export default function App() {
     }
     requestAnimationFrame(raf);
 
-    // Sync Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
     gsap.ticker.lagSmoothing(0);
 
-    // 2. GSAP Scroll Reveal Animations for sections and cards
-    const revealElements = document.querySelectorAll('#about, #portfolio, #testimonials, #services, #contact');
+    const revealElements = document.querySelectorAll('#about, #portfolio, #testimonials, #services, #faq, #contact');
     revealElements.forEach((el) => {
       gsap.fromTo(
         el,
@@ -109,9 +109,18 @@ export default function App() {
         {/* Services & Bento Grid Section */}
         <ServicesSection onOpenContactWithSummary={handleOpenContactWithSummary} currentLang={currentLang} />
 
+        {/* FAQ Accordion Section */}
+        <FaqSection currentLang={currentLang} />
+
         {/* Contact Section */}
         <ContactSection prefilledSummary={prefilledSummary} currentLang={currentLang} />
       </main>
+
+      {/* Floating Quick Chat Launcher */}
+      <FloatingChatWidget />
+
+      {/* Live Social Proof Leads Ticker */}
+      <LiveLeadsTicker />
 
       {/* Detailed Case Project Modal */}
       {selectedProject && (

@@ -86,6 +86,13 @@ export default function Navbar({ onOpenContact, currentLang, onChangeLang }) {
             {t.services}
           </button>
           <button
+            onClick={() => scrollToSection('faq')}
+            className="text-sm font-medium text-slate-300 hover:text-pink-400 transition-colors"
+            data-cursor="GO"
+          >
+            {t.faq || 'FAQ'}
+          </button>
+          <button
             onClick={() => scrollToSection('contact')}
             className="text-sm font-medium text-slate-300 hover:text-pink-400 transition-colors"
             data-cursor="GO"

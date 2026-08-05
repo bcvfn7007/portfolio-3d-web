@@ -5,6 +5,7 @@ export const translations = {
       portfolio: 'Портфолио',
       services: 'Услуги & Прайс',
       testimonials: 'Отзывы',
+      faq: 'FAQ',
       contact: 'Контакты',
       write: 'Написать'
     },
@@ -109,6 +110,34 @@ export const translations = {
         }
       ]
     },
+    faq: {
+      badge: 'ОТВЕТЫ НА ВОПРОСЫ',
+      title1: 'Часто задаваемые ',
+      titleHighlight: 'вопросы',
+      sub: 'Всё, что вам нужно знать перед стартом совместной работы.',
+      items: [
+        {
+          q: 'Сколько дней занимает разработка сайта или бота?',
+          a: 'Простой Лендинг или Telegram-бот создаётся за 3 дня. Более сложные проекты (бизнес-сайты с админ-панелью или Telegram Mini Apps) занимают от 5 до 7 дней.'
+        },
+        {
+          q: 'Как устроен процесс оплаты и предоплаты?',
+          a: 'Работа строится по прозрачной схеме: 50% предоплата перед стартом разработки и 50% после полной демонстрации готового проекта и вашего утверждения.'
+        },
+        {
+          q: 'Входит ли в стоимость адаптация под смартфоны?',
+          a: 'Да! Абсолютно все сайты разрабатываются с 100% адаптивностью под любые экраны: смартфоны, планшеты и ноутбуки, а также оптимизированы под высокую скорость загрузки.'
+        },
+        {
+          q: 'Как заявки с сайта попадают ко мне?',
+          a: 'Заявки с вашего сайта будут поступать напрямую в ваш личный Telegram или в вашего Telegram-бота в режиме реального времени с уведомлением со звуком.'
+        },
+        {
+          q: 'Оказывается ли поддержка после сдачи проекта?',
+          a: 'Да, я предоставляю бесплатную техническую поддержку и гарантию на все выполненные проекты в течение 30 дней после запуска.'
+        }
+      ]
+    },
     services: {
       badge: 'УСЛУГИ И СТОИМОСТЬ',
       title1: 'Решения для вашего ',
@@ -159,7 +188,7 @@ export const translations = {
       contactLabel: 'Ваш Telegram / Телефон *',
       descLabel: 'Описание проекта или задача',
       namePlaceholder: 'Введите ваше имя',
-      contactPlaceholder: '@username или +998901234567',
+      contactPlaceholder: '+998901234567 или @username',
       descPlaceholder: 'Опишите вашу задачу или пожелания по проекту...',
       btnSend: 'Отправить сообщение',
       submitting: 'Отправка заявки...'
@@ -171,6 +200,7 @@ export const translations = {
       portfolio: 'Portfolio',
       services: 'Xizmatlar & Narxlar',
       testimonials: 'Sharhlar',
+      faq: 'FAQ',
       contact: 'Aloqa',
       write: 'Yozish'
     },
@@ -275,6 +305,34 @@ export const translations = {
         }
       ]
     },
+    faq: {
+      badge: 'SAVOLLARGA JAVOBLAR',
+      title1: 'Keng tarqalgan ',
+      titleHighlight: 'savollar',
+      sub: 'Hamkorlikni boshlashdan oldin bilingiz kerak bo\'lgan asosiy ma\'lumotlar.',
+      items: [
+        {
+          q: 'Sayt yoki bot yaratish necha kun davom etadi?',
+          a: 'Oddiy Lendin sayt yoki Telegram-bot 3 kunda tayyor bo\'ladi. Murakkabroq loyihalar 5 kundan 7 kungacha vaqt oladi.'
+        },
+        {
+          q: 'To\'lov va oldindan to\'lov qanday tartibda amalga oshiriladi?',
+          a: 'Ish shaffof sxema bo\'yicha olib boriladi: 50% oldindan to\'lov va 50% tayyor loyiha to\'liq ko\'rsatilib tasdiqlangandan so\'ng.'
+        },
+        {
+          q: 'Smartfonlarga moslashuvchanlik narxga kiradimi?',
+          a: 'Ha! Barcha saytlar 100% barcha ekranlarga moslashuvchan holda yaratiladi.'
+        },
+        {
+          q: 'Saytdan tushgan arizalar menga qanday yetib boradi?',
+          a: 'Arizalar real vaqt rejimida to\'g\'ridan-to\'g me\'yordagi Telegramingizga kelib tushadi.'
+        },
+        {
+          q: 'Loyiha topshirilgandan so\'ng qo\'llab-quvvatlash bormi?',
+          a: 'Ha, men 30 kun davomida bepul texnik qo\'llab-quvvatlash kafolatini beraman.'
+        }
+      ]
+    },
     services: {
       badge: 'XIZMATLAR VA NARXLAR',
       title1: 'Biznesingiz uchun ',
@@ -325,7 +383,7 @@ export const translations = {
       contactLabel: 'Telegram / Telefoningiz *',
       descLabel: 'Loyiha tavsifi yoki vazifa',
       namePlaceholder: 'Ismingizni kiriting',
-      contactPlaceholder: '@username yoki +998901234567',
+      contactPlaceholder: '+998901234567 yoki @username',
       descPlaceholder: 'Loyihangiz haqida qisqacha ma\'lumot bering...',
       btnSend: 'Xabar yuborish',
       submitting: 'Yuborilmoqda...'
@@ -337,6 +395,7 @@ export const translations = {
       portfolio: 'Portfolio',
       services: 'Services & Pricing',
       testimonials: 'Testimonials',
+      faq: 'FAQ',
       contact: 'Contact',
       write: 'Get in Touch'
     },
@@ -441,6 +500,34 @@ export const translations = {
         }
       ]
     },
+    faq: {
+      badge: 'FAQ & ANSWERS',
+      title1: 'Frequently Asked ',
+      titleHighlight: 'Questions',
+      sub: 'Everything you need to know before starting project development.',
+      items: [
+        {
+          q: 'How many days does website or bot development take?',
+          a: 'An Economy Landing Page or simple Telegram bot takes just 3 days. Turnkey business websites with admin CMS or Telegram Mini Apps take 5 to 7 days.'
+        },
+        {
+          q: 'What is the payment structure and deposit?',
+          a: 'Development works on a transparent schedule: 50% deposit before start and 50% after full project demonstration and your final approval.'
+        },
+        {
+          q: 'Is mobile smartphone responsiveness included?',
+          a: 'Yes! 100% of websites are crafted with full smartphone, tablet, and desktop responsiveness and speed optimization.'
+        },
+        {
+          q: 'How do website leads reach my phone?',
+          a: 'Website inquiries deliver directly into your personal Telegram account or Telegram Bot with instant sound notifications.'
+        },
+        {
+          q: 'Do you offer support after project delivery?',
+          a: 'Yes, I provide 30 days of free technical support and bug warranty on all completed projects.'
+        }
+      ]
+    },
     services: {
       badge: 'SERVICES & PRICING',
       title1: 'Solutions for your ',
@@ -491,7 +578,7 @@ export const translations = {
       contactLabel: 'Your Telegram / Phone *',
       descLabel: 'Project details or requirements',
       namePlaceholder: 'Enter your name',
-      contactPlaceholder: '@username or +123456789',
+      contactPlaceholder: '+998901234567 or @username',
       descPlaceholder: 'Describe your project or task details...',
       btnSend: 'Send Message',
       submitting: 'Sending inquiry...'
