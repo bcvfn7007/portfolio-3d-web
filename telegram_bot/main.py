@@ -26,6 +26,7 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176").strip()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 WEB_APP_URL = "https://developer-studio.onrender.com/"
 RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://portfolio-3d-web.onrender.com/health").strip()
 
@@ -65,7 +66,7 @@ def init_db():
         )
     """)
 
-    # Table for bot settings (e.g. channel ID / username)
+    # Table for bot settings
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS settings (
             key TEXT PRIMARY KEY,
@@ -149,26 +150,83 @@ def get_all_user_ids():
     conn.close()
     return user_ids
 
-# Clean channel username helper
 def clean_channel_input(raw: str) -> str:
     s = raw.strip()
-    # If full URL like https://t.me/dev_0_studio or t.me/dev_0_studio
     if "t.me/" in s:
         s = s.split("t.me/")[-1].strip("/")
-    # Remove leading @
     s = s.lstrip("@")
     if not s.startswith("-100"):
         return f"@{s}"
     return s
 
-# Validate contact number or username
 def is_valid_contact(contact_str: str) -> bool:
     clean = contact_str.strip().replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
     if clean.startswith("@") and len(clean) >= 5:
         return True
-    # Digits count check (7 to 15 digits)
     digits = re.sub(r"[^\d]", "", clean)
     return len(digits) >= 7 and len(digits) <= 15
+
+# --- Google Gemini AI Integration ---
+SYSTEM_PROMPT = """
+Ты — вежливый, умный и профессиональный ИИ-ассистент студии веб-разработки Alex Dev.Studio.
+Твоя задача — отвечать на вопросы клиентов про разработку сайтов, Telegram-ботов и веб-приложений (TMA), консультировать по ценам и помогать оформить заказ.
+
+НАШИ ТАРИФЫ И ЦЕНЫ:
+- Лендинги и Сайты: от $20 (Эконом $20-25, Стандарт $35-40, Бизнес $60-70). Сроки: от 3 до 5 дней.
+- Telegram-боты: от $15 (Простой $15-20, С БД $30-35, CRM $45-50). Сроки: от 3 до 7 дней.
+- Telegram Mini Apps (TMA): от $60. Сроки: от 5 до 7 дней.
+- 🔥 Спец-акция "Сайт + Бот": $30 за весь комплект (экономия $10).
+- Предоплата: 50% перед стартом разработки, 50% после сдачи готового проекта.
+- Портфолио-сайт: https://developer-studio.onrender.com/
+- Прямой контакт разработчика Alex: @o_o_developer
+
+ПРАВИЛА ОТВЕТА:
+1. Отвечай вежливо, кратко (2-4 предложения) с приятными эмодзи.
+2. Подстраивайся под язык пользователя (русский, узбекский или английский).
+3. В конце ответа всегда предложи нажать кнопку '🚀 Заказать разработку' или написать напрямую разработчику @o_o_developer.
+"""
+
+async def ask_gemini_ai(user_message: str, user_name: str) -> str:
+    api_key = get_setting("gemini_api_key", GEMINI_API_KEY)
+    
+    if not api_key:
+        # Intelligent fallback consultation if API key not set yet
+        return (
+            f"👋 Здравствуйте, {user_name}!\n\n"
+            "Я ИИ-консультант студии **Dev.Studio**. Разрабатываем современные сайты от **$20** и Telegram-ботов от **$15** (готовность от 3 дней).\n\n"
+            "🔥 У нас действует **Спец-комплект: Сайт + Бот за $30**!\n"
+            "Нажмите кнопку **🚀 Заказать разработку** ниже или напишите разработчику в личку: @o_o_developer"
+        )
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"text": f"{SYSTEM_PROMPT}\n\nИмя клиента: {user_name}\nВопрос клиента: {user_message}"}
+                ]
+            }
+        ]
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=payload, timeout=12) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    ai_reply = data['candidates'][0]['content']['parts'][0]['text']
+                    return ai_reply.strip()
+                else:
+                    logger.error(f"Gemini API Error {response.status}")
+    except Exception as e:
+        logger.error(f"Failed to query Gemini AI: {e}")
+
+    return (
+        f"👋 Здравствуйте, {user_name}!\n\n"
+        "Мы создаём стильные сайты от $20 и Telegram-ботов от $15 с гарантией качества за 3 дня.\n"
+        "Для быстрого заказа нажмите **🚀 Заказать разработку** или напишите напрямую разработчику: @o_o_developer"
+    )
 
 # --- FSM States ---
 class ServiceWizard(StatesGroup):
@@ -180,6 +238,7 @@ class AdminStates(StatesGroup):
     waiting_broadcast_message = State()
     waiting_channel_post = State()
     waiting_channel_username = State()
+    waiting_gemini_key = State()
 
 # Developer Availability Status State
 dev_status = {"available": True}
@@ -198,10 +257,12 @@ def get_main_menu_keyboard():
 
 def get_admin_keyboard():
     status_text = "🟢 Статус: Открыт к заказам" if dev_status["available"] else "🔴 Статус: Занят"
+    ai_status = "🤖 Gemini AI: ВКЛ" if get_setting("ai_enabled", "true") == "true" else "🤖 Gemini AI: ВЫКЛ"
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📊 Статистика"), KeyboardButton(text="📋 Последние заявки")],
             [KeyboardButton(text="📝 Пост в Канал"), KeyboardButton(text="📢 Массовая рассылка")],
+            [KeyboardButton(text=ai_status), KeyboardButton(text="🔑 Ввести Gemini API Key")],
             [KeyboardButton(text=status_text), KeyboardButton(text="⚙️ Настройки Канала")],
             [KeyboardButton(text="🚪 Выйти из админки")]
         ],
@@ -256,8 +317,57 @@ async def cmd_admin(message: types.Message, state: FSMContext):
     target_chan = get_setting("channel_username", "Не привязан")
     await message.answer(
         "⚙️ <b>Панель администратора Dev.Studio</b>\n\n"
-        f"📢 <b>Текущий канал:</b> <code>{target_chan}</code>\n\n"
+        f"📢 <b>Привязанный канал:</b> <code>{target_chan}</code>\n"
+        f"🤖 <b>Gemini AI API Key:</b> {'Установлен ✅' if get_setting('gemini_api_key', GEMINI_API_KEY) else 'Не задан ⚠️'}\n\n"
         "Выберите действие на клавиатуре ниже:",
+        parse_mode="HTML",
+        reply_markup=get_admin_keyboard()
+    )
+
+@dp.message(F.text.startswith("🤖 Gemini AI:"))
+async def admin_toggle_ai(message: types.Message):
+    if not is_admin(message.from_user.id):
+        return
+
+    current = get_setting("ai_enabled", "true")
+    new_val = "false" if current == "true" else "true"
+    set_setting("ai_enabled", new_val)
+    
+    status_msg = "🟢 <b>Gemini AI Включен</b> — бот будет автоматически консультировать клиентов 24/7!" if new_val == "true" else "🔴 <b>Gemini AI Отключен</b>"
+    await message.answer(status_msg, parse_mode="HTML", reply_markup=get_admin_keyboard())
+
+@dp.message(F.text == "🔑 Ввести Gemini API Key")
+async def admin_set_gemini_key(message: types.Message, state: FSMContext):
+    if not is_admin(message.from_user.id):
+        return
+
+    await state.set_state(AdminStates.waiting_gemini_key)
+    cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ Отмена")]], resize_keyboard=True)
+    await message.answer(
+        "🔑 <b>НАСТРОЙКА GOOGLE GEMINI API KEY:</b>\n\n"
+        "Отправьте ваш бесплатный API Ключ от Google Gemini (получить бесплатно на <code>aistudio.google.com</code>):",
+        parse_mode="HTML",
+        reply_markup=cancel_kb
+    )
+
+@dp.message(AdminStates.waiting_gemini_key)
+async def process_save_gemini_key(message: types.Message, state: FSMContext):
+    if not is_admin(message.from_user.id):
+        return
+
+    if message.text == "❌ Отмена":
+        await state.clear()
+        await message.answer("Отменено.", reply_markup=get_admin_keyboard())
+        return
+
+    key_input = message.text.strip()
+    set_setting("gemini_api_key", key_input)
+    set_setting("ai_enabled", "true")
+    await state.clear()
+    
+    await message.answer(
+        "✅ <b>Google Gemini API Key успешно сохранен!</b>\n\n"
+        "Теперь ИИ-Консультант автоматически отвечает клиентам 24/7!",
         parse_mode="HTML",
         reply_markup=get_admin_keyboard()
     )
@@ -270,6 +380,7 @@ async def admin_stats(message: types.Message):
     total_leads, site_leads, bot_leads, total_users = get_stats()
     status_str = "🟢 Открыт к заказам 24/7" if dev_status["available"] else "🔴 Занят на проекте"
     target_chan = get_setting("channel_username", "Не привязан")
+    ai_str = "ВКЛ 🤖" if get_setting("ai_enabled", "true") == "true" else "ВЫКЛ"
 
     stats_text = (
         "📊 <b>СТАТИСТИКА БОТА И ЗАЯВОК:</b>\n\n"
@@ -278,6 +389,7 @@ async def admin_stats(message: types.Message):
         f"🤖 <b>Заявок из Telegram-бота:</b> {bot_leads}\n"
         f"👥 <b>Всего пользователей в базе:</b> {total_users}\n"
         f"📢 <b>Привязанный канал:</b> <code>{target_chan}</code>\n"
+        f"🧠 <b>Gemini AI Консультант:</b> {ai_str}\n"
         f"⚡ <b>Текущий статус разработчика:</b> {status_str}"
     )
     await message.answer(stats_text, parse_mode="HTML", reply_markup=get_admin_keyboard())
@@ -320,8 +432,7 @@ async def admin_channel_settings(message: types.Message, state: FSMContext):
     await message.answer(
         "⚙️ <b>НАСТРОЙКА КАНАЛА ДЛЯ ПУБЛИКАЦИИ:</b>\n\n"
         f"Текущий канал: <code>{current_chan}</code>\n\n"
-        "Отправьте юзернейм или ссылку на канал (например: <code>@dev_0_studio</code> или <code>https://t.me/dev_0_studio</code>):\n"
-        "<i>Убедитесь, что бот добавлен в Администраторы канала!</i>",
+        "Отправьте юзернейм или ссылку на канал (например: <code>@dev_0_studio</code> или <code>https://t.me/dev_0_studio</code>):",
         parse_mode="HTML",
         reply_markup=cancel_kb
     )
@@ -341,8 +452,7 @@ async def process_set_channel_username(message: types.Message, state: FSMContext
     await state.clear()
     
     await message.answer(
-        f"✅ Канал успешно привязан: <code>{cleaned_channel}</code>\n\n"
-        "Убедитесь, что бот назначен **Администратором** канала с правом публикации!",
+        f"✅ Канал успешно привязан: <code>{cleaned_channel}</code>",
         parse_mode="HTML",
         reply_markup=get_admin_keyboard()
     )
@@ -370,10 +480,7 @@ async def admin_start_channel_post(message: types.Message, state: FSMContext):
     await message.answer(
         f"📝 <b>СОЗДАНИЕ ПОСТА ДЛЯ КАНАЛА ({target_chan}):</b>\n\n"
         "Отправьте текст или картинку с описанием поста.\n"
-        "Бот автоматически прикрепит к посту кнопки:\n"
-        "• 📱 <b>3D Портфолио (TMA)</b>\n"
-        "• 🚀 <b>Заказать разработку ↗️</b>\n"
-        "• 💬 <b>Написать разработчику ↗️</b>",
+        "Бот автоматически прикрепит к посту интерактивные кнопки!",
         parse_mode="HTML",
         reply_markup=cancel_kb
     )
@@ -550,13 +657,14 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
     welcome_text = (
         f"👋 <b>Здравствуйте, {user.first_name}!</b>\n\n"
-        "Я официальный бот веб-разработчика <b>Alex (Dev.Studio)</b>.\n\n"
+        "Я официальный ИИ-ассистент студии веб-разработки <b>Alex (Dev.Studio)</b>.\n\n"
         "Чем я могу помочь?\n"
         "• 📱 <b>Открыть Web App (TMA)</b> — запустить сайт прямо в Telegram!\n"
         "• 🚀 <b>Заказать разработку</b> — оформить заявку на сайт или бота за 1 минуту\n"
         "• 💼 <b>Мои проекты</b> — посмотреть примеры реальных работающих сайтов\n"
         "• 💰 <b>Узнать цены</b> — ознакомиться с тарифами\n"
-        "• 💬 <b>Прямая связь</b> — написать мне напрямую"
+        "• 💬 <b>Прямая связь</b> — написать мне напрямую\n\n"
+        "💡 <i>Вы также можете задать мне любой вопрос про разработку в свободной форме!</i>"
     )
     await message.answer(welcome_text, parse_mode="HTML", reply_markup=get_main_menu_keyboard())
 
@@ -759,13 +867,30 @@ async def process_contact_info(message: types.Message, state: FSMContext, bot: B
         except Exception as e:
             logger.error(f"Failed to send admin lead notification: {e}")
 
+# Fallback AI Assistant Handler for Free-Form Client Questions
 @dp.message()
-async def fallback_handler(message: types.Message, state: FSMContext):
+async def fallback_gemini_ai_handler(message: types.Message, state: FSMContext):
     user = message.from_user
     register_user(user.id, user.username, user.full_name)
 
     current_state = await state.get_state()
-    if current_state is None:
+    if current_state is not None:
+        return
+
+    # Check if AI Assistant is enabled in settings
+    if get_setting("ai_enabled", "true") == "true":
+        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+        client_name = user.first_name or user.full_name or "Клиент"
+        ai_response = await ask_gemini_ai(message.text, client_name)
+        
+        inline_kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="🚀 Заказать разработку", callback_data="wizard_site")],
+                [InlineKeyboardButton(text="💬 Написать Alex в личку", url="https://t.me/o_o_developer")]
+            ]
+        )
+        await message.answer(ai_response, parse_mode="Markdown", reply_markup=inline_kb)
+    else:
         await message.answer(
             "Воспользуйтесь кнопками меню ниже для заказа или просмотра проектов 👇",
             reply_markup=get_main_menu_keyboard()
@@ -773,7 +898,7 @@ async def fallback_handler(message: types.Message, state: FSMContext):
 
 # Render Health Check Route Handler
 async def handle_health_check(request):
-    return web.Response(text="Render Health Check OK - Telegram Bot & Channel Poster 24/7 Active!", status=200)
+    return web.Response(text="Render Health Check OK - Telegram Bot, Gemini AI & Admin 24/7 Active!", status=200)
 
 # 24/7 Self-Ping Keep-Alive Task (Prevents Render Free Inactivity Sleep)
 async def self_ping_loop():
@@ -797,7 +922,7 @@ async def main():
 
     init_db()
 
-    logger.info("Starting Telegram Bot with Aiogram Long Polling & Channel Poster...")
+    logger.info("Starting Telegram Bot with Aiogram Long Polling, Gemini AI & Channel Poster...")
     bot = Bot(token=BOT_TOKEN)
     
     await bot.delete_webhook(drop_pending_updates=True)
@@ -815,7 +940,7 @@ async def main():
 
     asyncio.create_task(self_ping_loop())
 
-    logger.info("🚀 Telegram Order Intake, Portfolio, Admin Panel & Channel Poster Bot is live 24/7!")
+    logger.info("🚀 Telegram Order Intake, Portfolio, Gemini AI & Admin Panel Bot is live 24/7!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
