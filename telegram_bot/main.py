@@ -30,7 +30,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "").strip()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 WEB_APP_URL = "https://developer-studio.onrender.com/"
-RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://developer-studio.onrender.com/health").strip()
+RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://portfolio-3d-web.onrender.com/health").strip()
 
 # Origin allowed to call the public lead-intake API (the portfolio website)
 SITE_ORIGIN = os.getenv("SITE_ORIGIN", "*").strip()
