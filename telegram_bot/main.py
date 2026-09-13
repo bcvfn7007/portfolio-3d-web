@@ -1,5 +1,7 @@
 import os
 import re
+import html
+import time
 import sqlite3
 import asyncio
 import logging
@@ -24,11 +26,19 @@ from aiogram.types import (
 # Load environment variables
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ").strip()
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "8726413176").strip()
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "").strip()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 WEB_APP_URL = "https://developer-studio.onrender.com/"
-RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://portfolio-3d-web.onrender.com/health").strip()
+RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "https://developer-studio.onrender.com/health").strip()
+
+# Origin allowed to call the public lead-intake API (the portfolio website)
+SITE_ORIGIN = os.getenv("SITE_ORIGIN", "*").strip()
+
+# Simple in-memory rate limiter for the public /api/lead endpoint: {ip: [timestamps]}
+_lead_rate_limit = {}
+LEAD_RATE_LIMIT_MAX = 5
+LEAD_RATE_LIMIT_WINDOW = 600  # seconds
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "leads.db")
 
@@ -899,6 +909,78 @@ async def fallback_gemini_ai_handler(message: types.Message, state: FSMContext):
 async def handle_health_check(request):
     return web.Response(text="Render Health Check OK - Telegram Bot, Gemini AI & Admin 24/7 Active!", status=200)
 
+def _cors_headers():
+    return {
+        "Access-Control-Allow-Origin": SITE_ORIGIN,
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+    }
+
+def _is_valid_name(name: str) -> bool:
+    name = (name or "").strip()
+    return 2 <= len(name) <= 40 and bool(re.match(r"^[a-zA-Zа-яА-ЯёЁ\s\-\.']{2,40}$", name))
+
+def _lead_rate_limited(ip: str) -> bool:
+    now = time.time()
+    hits = [t for t in _lead_rate_limit.get(ip, []) if now - t < LEAD_RATE_LIMIT_WINDOW]
+    hits.append(now)
+    _lead_rate_limit[ip] = hits
+    return len(hits) > LEAD_RATE_LIMIT_MAX
+
+# CORS Preflight Handler for the Website Lead-Intake API
+async def handle_lead_options(request):
+    return web.Response(status=204, headers=_cors_headers())
+
+# Public Website Lead-Intake API (replaces sending the bot token directly from the browser)
+async def handle_lead_submit(request):
+    bot: Bot = request.app["bot"]
+    ip = request.headers.get("X-Forwarded-For", request.remote or "unknown").split(",")[0].strip()
+
+    if _lead_rate_limited(ip):
+        return web.json_response(
+            {"ok": False, "error": "Слишком много заявок. Попробуйте позже."},
+            status=429, headers=_cors_headers()
+        )
+
+    try:
+        data = await request.json()
+    except Exception:
+        return web.json_response({"ok": False, "error": "Некорректный запрос."}, status=400, headers=_cors_headers())
+
+    name = str(data.get("name", "")).strip()
+    contact = str(data.get("contact", "")).strip()
+    description = str(data.get("description", "")).strip()
+    lang = str(data.get("lang", "RU")).strip()[:5]
+
+    if not _is_valid_name(name):
+        return web.json_response({"ok": False, "error": "Некорректное имя."}, status=400, headers=_cors_headers())
+    if not is_valid_contact(contact):
+        return web.json_response({"ok": False, "error": "Некорректный контакт."}, status=400, headers=_cors_headers())
+
+    safe_name = html.escape(name)[:100]
+    safe_contact = html.escape(contact)[:100]
+    safe_description = html.escape(description)[:2000] or "Без комментария"
+
+    save_lead(name[:100], contact[:100], "Заявка с сайта", description[:2000], "site")
+
+    if ADMIN_CHAT_ID:
+        lead_message = (
+            "🚀 <b>НОВАЯ ЗАЯВКА С ПОРТФОЛИО-САЙТА!</b>\n\n"
+            f"👤 <b>Имя клиента:</b> {safe_name}\n"
+            f"📞 <b>Контакт:</b> <code>{safe_contact}</code>\n"
+            f"🌐 <b>Язык:</b> {html.escape(lang)}\n"
+            f"📝 <b>Детали проекта / Расчёт:</b>\n{safe_description}"
+        )
+        try:
+            await bot.send_message(chat_id=ADMIN_CHAT_ID, text=lead_message, parse_mode="HTML")
+        except Exception as e:
+            logger.error(f"Failed to deliver site lead to admin: {e}")
+            return web.json_response(
+                {"ok": False, "error": "Не удалось отправить заявку."}, status=502, headers=_cors_headers()
+            )
+
+    return web.json_response({"ok": True}, headers=_cors_headers())
+
 # 24/7 Self-Ping Keep-Alive Task (Prevents Render Free Inactivity Sleep)
 async def self_ping_loop():
     await asyncio.sleep(15)
@@ -927,8 +1009,11 @@ async def main():
     await bot.delete_webhook(drop_pending_updates=True)
 
     app = web.Application()
+    app["bot"] = bot
     app.router.add_get('/', handle_health_check)
     app.router.add_get('/health', handle_health_check)
+    app.router.add_post('/api/lead', handle_lead_submit)
+    app.router.add_options('/api/lead', handle_lead_options)
 
     runner = web.AppRunner(app)
     await runner.setup()

@@ -1,7 +1,8 @@
-import React from 'react';
-import ThreeHeroCanvas from './ThreeHeroCanvas';
+import React, { Suspense, lazy } from 'react';
 import { ArrowDownRight, Send, Sparkles, CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
 import { translations } from '../utils/translations';
+
+const ThreeHeroCanvas = lazy(() => import('./ThreeHeroCanvas'));
 
 export default function HeroSection({ onOpenContact, currentLang }) {
   const t = translations[currentLang]?.hero || translations.RU.hero;
@@ -112,7 +113,9 @@ export default function HeroSection({ onOpenContact, currentLang }) {
           <div className="lg:col-span-5 relative flex items-center justify-center w-full">
             <div className="w-full relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 to-purple-600/20 rounded-full blur-3xl -z-10" />
-              <ThreeHeroCanvas />
+              <Suspense fallback={<div className="w-full h-[280px] sm:h-[360px] lg:h-[460px]" />}>
+                <ThreeHeroCanvas />
+              </Suspense>
             </div>
           </div>
 

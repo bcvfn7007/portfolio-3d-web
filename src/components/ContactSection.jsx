@@ -96,32 +96,27 @@ export default function ContactSection({ prefilledSummary, currentLang }) {
     setStatus({ submitting: true, submitted: false, error: null });
 
     try {
-      // Send Lead Payload directly to Telegram Bot API
-      const BOT_TOKEN = '7790495377:AAEAQCqq3Qr9hOQHXqPRFyc2zNNsCa4SltQ';
-      const CHAT_ID = '8726413176';
+      // Send Lead Payload to our backend, which relays it to Telegram server-side
+      const LEADS_API_URL = import.meta.env.VITE_LEADS_API_URL || 'https://developer-studio.onrender.com';
 
-      const leadMessage = 
-        `🚀 <b>НОВАЯ ЗАЯВКА С ПОРТФОЛИО-САЙТА!</b>\n\n` +
-        `👤 <b>Имя клиента:</b> ${formData.name.trim()}\n` +
-        `📞 <b>Контакт:</b> <code>${formData.contact.trim()}</code>\n` +
-        `🌐 <b>Язык:</b> ${currentLang}\n` +
-        `📝 <b>Детали проекта / Расчёт:</b>\n${formData.description.trim() || 'Без комментария'}`;
-
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      const response = await fetch(`${LEADS_API_URL}/api/lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: leadMessage,
-          parse_mode: 'HTML'
+          name: formData.name.trim(),
+          contact: formData.contact.trim(),
+          description: formData.description.trim(),
+          lang: currentLang
         })
       });
 
-      if (response.ok) {
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok && result.ok) {
         setStatus({ submitting: false, submitted: true, error: null });
         setFormData({ name: '', contact: '', description: '' });
       } else {
-        throw new Error('Не удалось отправить заявку.');
+        throw new Error(result.error || 'Не удалось отправить заявку.');
       }
     } catch (err) {
       console.error(err);

@@ -9,7 +9,7 @@ export default function PortfolioSection({ onSelectProject, currentLang }) {
     {
       id: 'stanford',
       title: 'Stanford School',
-      image: '/assets/stanford.png',
+      image: '/assets/stanford.webp',
       tags: ['React', 'Node.js', 'PostgreSQL', 'TailwindCSS', 'GSAP'],
       icon: GraduationCap,
       color: 'from-pink-500 to-purple-600',
@@ -18,7 +18,7 @@ export default function PortfolioSection({ onSelectProject, currentLang }) {
     {
       id: 'yoshlar',
       title: 'Yoshlar Qalqoni AI Platform',
-      image: '/assets/yoshlar.png',
+      image: '/assets/yoshlar.webp',
       tags: ['React', 'AI Analytics', 'Node.js', 'API Integration', 'Dark Theme UI'],
       icon: Shield,
       color: 'from-cyan-500 to-blue-600',
@@ -27,7 +27,7 @@ export default function PortfolioSection({ onSelectProject, currentLang }) {
     {
       id: 'saruno',
       title: 'SARUNO | Mira Miller',
-      image: '/assets/projects/saruno.png',
+      image: '/assets/projects/saruno.webp',
       tags: ['HTML5/CSS3', 'JavaScript', 'Multilingual (RU/EN/UZ)', 'Responsive', 'B2B Catalog'],
       icon: Factory,
       color: 'from-amber-500 to-amber-700',

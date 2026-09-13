@@ -52,7 +52,7 @@ const approach = [
               <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-purple-600 rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500" />
               <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-3xl overflow-hidden glass-card border-white/20 shadow-2xl">
                 <img
-                  src="/assets/avatar.png"
+                  src="/assets/avatar.webp"
                   alt="Telegram Developer Profile Avatar"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

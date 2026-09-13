@@ -13,7 +13,6 @@ import ServicesSection from './components/ServicesSection';
 import FaqSection from './components/FaqSection';
 import ContactSection from './components/ContactSection';
 import FloatingChatWidget from './components/FloatingChatWidget';
-import LiveLeadsTicker from './components/LiveLeadsTicker';
 import ProjectModal from './components/ProjectModal';
 import Footer from './components/Footer';
 
@@ -118,9 +117,6 @@ export default function App() {
 
       {/* Floating Quick Chat Launcher */}
       <FloatingChatWidget />
-
-      {/* Live Social Proof Leads Ticker */}
-      <LiveLeadsTicker />
 
       {/* Detailed Case Project Modal */}
       {selectedProject && (
