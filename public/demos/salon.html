@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nargiz Beauty — демо-сайт салона</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#fcf8f8; --ink:#241a1f; --ink-dim:#76666d; --line:#eee2e5; --card:#fff;
+    --rose:#b0476a; --mauve:#6d5a7a;
+    --display:'Cormorant Garamond',Georgia,serif; --body:'Manrope',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--body); line-height:1.6;}
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--display); font-weight:600; margin:0; text-wrap:balance;}
+
+  .demo-bar{background:var(--ink); color:#fff; font-size:.82rem; text-align:center; padding:.55rem 1rem;}
+  .demo-bar a{color:#f3a9c1; font-weight:600;}
+
+  .wrap{max-width:960px; margin:0 auto; padding:0 1.25rem;}
+
+  header.hero{padding:3.5rem 0 3rem; display:grid; gap:1.1rem;}
+  .kicker{font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--rose); font-weight:700;}
+  .hero h1{font-size:clamp(2.8rem,9vw,4.8rem); line-height:1;}
+  .hero p{margin:0; color:var(--ink-dim); max-width:44ch; font-size:1.05rem;}
+  .badges{display:flex; flex-wrap:wrap; gap:.5rem;}
+  .badge{font-size:.82rem; font-weight:600; padding:.35rem .8rem; border-radius:999px; background:#f6e9ee; color:var(--rose);}
+  .cta-row{display:flex; flex-wrap:wrap; gap:.75rem; margin-top:.4rem;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; padding:.85rem 1.4rem; border-radius:999px;
+    font-weight:700; font-size:.95rem; text-decoration:none; border:1.5px solid var(--rose); cursor:pointer; font-family:var(--body);
+  }
+  .btn-primary{background:var(--rose); color:#fff;}
+  .btn-ghost{background:transparent; color:var(--rose);}
+  .btn:focus-visible{outline:3px solid var(--mauve); outline-offset:3px;}
+
+  section{padding:2.75rem 0; border-top:1px solid var(--line);}
+  section h2{font-size:clamp(1.9rem,4.5vw,2.5rem); margin-bottom:1.5rem;}
+
+  .prices{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.75rem 3rem;}
+  .prices h3{font-family:var(--body); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mauve); font-weight:700; margin-bottom:.5rem;}
+  .item{display:flex; align-items:baseline; gap:.5rem; padding:.45rem 0;}
+  .item .name{font-weight:600;}
+  .item .desc{display:block; color:var(--ink-dim); font-size:.85rem; font-weight:400;}
+  .item .dots{flex:1; border-bottom:1px dotted var(--line); transform:translateY(-4px);}
+  .item .price{font-variant-numeric:tabular-nums; color:var(--rose); font-weight:700; white-space:nowrap;}
+
+  .masters{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem;}
+  .master{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1.1rem 1.2rem; display:flex; flex-direction:column; gap:.2rem;}
+  .master .avatar{
+    width:52px; height:52px; border-radius:50%; margin-bottom:.5rem;
+    display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.4rem; font-weight:600; color:#fff;
+  }
+  .master strong{font-size:1rem;}
+  .master span{color:var(--ink-dim); font-size:.86rem;}
+
+  form{display:grid; gap:1rem; max-width:520px;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:1rem;}
+  label{display:flex; flex-direction:column; gap:.35rem; font-size:.85rem; font-weight:600;}
+  input,select{font:inherit; font-weight:400; padding:.75rem .9rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink);}
+  input:focus,select:focus{outline:none; border-color:var(--rose);}
+  .note{font-size:.82rem; color:var(--ink-dim); margin:0;}
+  .done{display:none; padding:1rem 1.2rem; border-radius:12px; background:#f6e9ee; color:#8a2d4d; font-weight:600; max-width:520px;}
+
+  .info{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem;}
+  .info div{display:flex; flex-direction:column; gap:.25rem;}
+  .info .label{font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-dim); font-weight:700;}
+
+  footer{padding:2.5rem 0 3rem; border-top:1px solid var(--line); font-size:.88rem; color:var(--ink-dim); display:flex; flex-direction:column; gap:.4rem;}
+  footer strong{color:var(--ink);}
+
+  @media (max-width:520px){ .row{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:no-preference){ .btn{transition:transform .15s ease;} .btn:hover{transform:translateY(-1px);} }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">Это демо-сайт. Так может выглядеть сайт вашего салона — <a href="https://t.me/o_o_developer" target="_blank" rel="noreferrer">хочу такой же</a></div>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="kicker">Салон красоты · Ташкент</span>
+    <h1>Nargiz Beauty</h1>
+    <p>Маникюр, педикюр, брови и ресницы. Стерильные инструменты, свободные окна каждый день, запись онлайн за минуту.</p>
+    <div class="badges">
+      <span class="badge">Стерилизация сухожаром</span>
+      <span class="badge">Работаем с 09:00 до 21:00</span>
+      <span class="badge">Оплата картой</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#booking">Записаться онлайн</a>
+      <a class="btn btn-ghost" href="#prices">Цены</a>
+    </div>
+  </header>
+
+  <section id="prices">
+    <h2>Услуги и цены</h2>
+    <div class="prices">
+      <div>
+        <h3>Ногти</h3>
+        <div class="item"><span class="name">Маникюр с покрытием<span class="desc">гель-лак, однотон</span></span><span class="dots"></span><span class="price">150 000 сум</span></div>
+        <div class="item"><span class="name">Педикюр с покрытием</span><span class="dots"></span><span class="price">180 000 сум</span></div>
+        <div class="item"><span class="name">Наращивание</span><span class="dots"></span><span class="price">250 000 сум</span></div>
+        <div class="item"><span class="name">Снятие покрытия</span><span class="dots"></span><span class="price">40 000 сум</span></div>
+      </div>
+      <div>
+        <h3>Брови и ресницы</h3>
+        <div class="item"><span class="name">Коррекция бровей</span><span class="dots"></span><span class="price">60 000 сум</span></div>
+        <div class="item"><span class="name">Окрашивание бровей</span><span class="dots"></span><span class="price">80 000 сум</span></div>
+        <div class="item"><span class="name">Ламинирование ресниц</span><span class="dots"></span><span class="price">200 000 сум</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Мастера</h2>
+    <div class="masters">
+      <div class="master"><div class="avatar" style="background:#b0476a">Н</div><strong>Наргиз</strong><span>Топ-мастер маникюра, 7 лет опыта</span></div>
+      <div class="master"><div class="avatar" style="background:#6d5a7a">М</div><strong>Малика</strong><span>Педикюр и наращивание, 4 года</span></div>
+      <div class="master"><div class="avatar" style="background:#8c6f5a">Д</div><strong>Дильноза</strong><span>Брови и ресницы, 5 лет</span></div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <h2>Онлайн-запись</h2>
+    <form id="bookingForm">
+      <label>Услуга
+        <select name="service">
+          <option>Маникюр с покрытием</option><option>Педикюр с покрытием</option><option>Наращивание</option>
+          <option>Коррекция бровей</option><option>Ламинирование ресниц</option>
+        </select>
+      </label>
+      <div class="row">
+        <label>Дата<input name="date" type="date" required></label>
+        <label>Время<input name="time" type="time" required value="15:00"></label>
+      </div>
+      <div class="row">
+        <label>Имя<input name="name" required autocomplete="name" placeholder="Ваше имя"></label>
+        <label>Телефон<input name="phone" type="tel" required autocomplete="tel" placeholder="+998 90 123 45 67"></label>
+      </div>
+      <button class="btn btn-primary" type="submit">Записаться</button>
+      <p class="note">На настоящем сайте запись сразу приходит администратору в Telegram.</p>
+    </form>
+    <div class="done" id="bookingDone" role="status">Готово! В демо запись никуда не отправляется, а на вашем сайте она уже была бы у администратора в Telegram.</div>
+  </section>
+
+  <section>
+    <h2>Контакты</h2>
+    <div class="info">
+      <div><span class="label">Адрес</span><span>Здесь будет адрес вашего салона</span></div>
+      <div><span class="label">Часы работы</span><span>Ежедневно, 09:00 – 21:00</span></div>
+      <div><span class="label">Телефон</span><span>+998 00 000 00 00</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span><strong>Nargiz Beauty</strong> — вымышленный салон для демонстрации.</span>
+    <span>Сайт сделан <a href="https://developer-studio.onrender.com/" target="_blank" rel="noreferrer">Dev.Studio</a> за 3 дня. Хотите такой же для своего бизнеса? Telegram: <a href="https://t.me/o_o_developer" target="_blank" rel="noreferrer">@o_o_developer</a></span>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('bookingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('bookingDone').style.display = 'block';
+  });
+</script>
+</body>
+</html>
